@@ -52,6 +52,7 @@
       <a href="location.html" data-i18n="nav-location">活動場所</a>
       <a href="results.html" data-i18n="nav-results">試合結果</a>
       <a href="join.html" data-i18n="nav-join">募集</a>
+      <a href="index.html#soccer-news-section">⚽サッカーニュース</a>
       <a href="uranai/index.html" target="_blank">⚽ポジション診断</a>
     </div>
     <div class="lang-switcher">
@@ -110,7 +111,7 @@
         <div class="news-item news-info">
           <span class="news-tag tag-info" data-i18n="tag-info">お知らせ</span>
           <span class="news-date">8/14</span>
-          <span class="news-body">遊び心コンテンツ「⚽サッカーポジション診断」を公開しました！ナビの「ポジション診断」からどうぞ。</span>
+          <span class="news-body">「⚽サッカーポジション診断」と「⚽サッカーニュース」を追加しました！ナビからどうぞ。</span>
         </div>
 
         <div class="news-item news-info">
@@ -237,6 +238,10 @@
       <div class="popup-section">
         <span class="popup-section-label" data-i18n="popup-news-label">📢 お知らせ</span>
         <div class="popup-news">
+          <div class="popup-news-item">
+            <span class="popup-news-tag tag-info" data-i18n="tag-info">お知らせ</span>
+            <span>8/14　「⚽サッカーポジション診断」と「⚽サッカーニュース」を追加しました！</span>
+          </div>
           <div class="popup-news-item">
             <span class="popup-news-tag tag-info" data-i18n="tag-info">お知らせ</span>
             <span>8/12　中村さん・黒松さんが新加入しました！</span>
@@ -516,10 +521,10 @@
     });
   </script>
 
-  <section style="padding:1.5rem 0 0.5rem;background:var(--gray)">
+  <section id="soccer-news-section" class="section-dark" style="padding:1.5rem 0">
     <div class="container" style="max-width:640px">
-      <p style="font-size:0.72rem;color:var(--muted);font-weight:700;letter-spacing:0.05em;margin-bottom:0.6rem">⚽ サッカーニュース</p>
-      <ul id="soccer-news-list" style="list-style:none;display:flex;flex-direction:column;gap:0.5rem"></ul>
+      <p style="font-size:0.78rem;color:var(--gold-lt);font-weight:700;letter-spacing:0.05em;margin-bottom:0.8rem">⚽ サッカーニュース</p>
+      <ul id="soccer-news-list" style="list-style:none;display:flex;flex-direction:column;gap:0.6rem"></ul>
     </div>
   </section>
   <script>
@@ -527,7 +532,9 @@
       const ul = document.getElementById('soccer-news-list');
       if (!ul || !items.length) return;
       ul.innerHTML = items.slice(0, 5).map(it =>
-        `<li><a href="${it.link}" target="_blank" rel="noopener" style="font-size:0.82rem;color:var(--muted);text-decoration:none;line-height:1.5">・${it.title}</a></li>`
+        `<li><a href="${it.link}" target="_blank" rel="noopener" style="font-size:0.85rem;color:#9CA3AF;text-decoration:none;line-height:1.55">
+          <span style="color:var(--gold)">・</span>${it.title}
+        </a></li>`
       ).join('');
     }).catch(() => {});
   </script>
@@ -536,7 +543,6 @@
     <span class="footer-logo">FC ZIEL</span>
     <p style="margin-bottom:0.5rem"><a href="faq.html" style="color:#6B7280;text-decoration:none;font-size:0.82rem" data-i18n="footer-faq">よくある質問（FAQ）</a></p>
     <p data-i18n="footer-copy">© FC ZIEL｜東京都北区の社会人サッカーチーム</p>
-    <p style="margin-top:0.4rem"><a href="uranai/index.html" style="color:#9CA3AF;text-decoration:none;font-size:0.72rem" title="サッカーポジション診断">🐾</a></p>
   </footer>
 
 </body>
