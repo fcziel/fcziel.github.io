@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+<circle cx="160" cy="160" r="148" fill="white"/>
+<filter id="gl"><feGaussianBlur stdDeviation="3"/></filter>
+<circle cx="160" cy="160" r="146" fill="rgba(255,255,255,0.6)" filter="url(#gl)"/>
+
+<!-- 耳 -->
+<ellipse cx="108" cy="78" rx="24" ry="32" fill="#E8C99A" stroke="#222" stroke-width="3.5" transform="rotate(-18 108 78)"/>
+<ellipse cx="212" cy="78" rx="24" ry="32" fill="#E8C99A" stroke="#222" stroke-width="3.5" transform="rotate(18 212 78)"/>
+<ellipse cx="108" cy="80" rx="12" ry="18" fill="#F7E3CC" transform="rotate(-18 108 80)"/>
+<ellipse cx="212" cy="80" rx="12" ry="18" fill="#F7E3CC" transform="rotate(18 212 80)"/>
+
+<!-- 体（ゴールドユニフォーム） -->
+<ellipse cx="160" cy="228" rx="74" ry="68" fill="#D4A01A" stroke="#222" stroke-width="3.5"/>
+<path d="M132,175 L160,200 L188,175" fill="none" stroke="#1C2B4A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+<!-- 顔 -->
+<ellipse cx="160" cy="122" rx="66" ry="62" fill="#F5DCC0" stroke="#222" stroke-width="3.5"/>
+<circle cx="132" cy="114" r="10" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="132" cy="114" r="7" fill="#111"/>
+<circle cx="129" cy="111" r="2.5" fill="white"/>
+<circle cx="188" cy="114" r="10" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="188" cy="114" r="7" fill="#111"/>
+<circle cx="185" cy="111" r="2.5" fill="white"/>
+<path d="M144 140 Q160 146 176 140" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+<ellipse cx="118" cy="132" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)"/>
+<ellipse cx="202" cy="132" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)"/>
+
+<!-- 胸の盾バッジ（守備の要） -->
+<path d="M160,190 L182,198 L182,220 Q182,240 160,250 Q138,240 138,220 L138,198 Z" fill="#1C2B4A" stroke="#222" stroke-width="3"/>
+<path d="M160,199 L176,205 L176,220 Q176,233 160,241 Q144,233 144,220 L144,205 Z" fill="#F5C842"/>
+
+<!-- 左右の壁（守備の壁をイメージ） -->
+<circle cx="55" cy="230" r="16" fill="#D4A01A" stroke="#222" stroke-width="3"/>
+<circle cx="265" cy="230" r="16" fill="#D4A01A" stroke="#222" stroke-width="3"/>
+
+<!-- 足元のボール -->
+<circle cx="160" cy="286" r="16" fill="white" stroke="#222" stroke-width="2.5"/>
+<polygon points="160,278 165,282 163,288 157,288 155,282" fill="#222"/>
+</svg>

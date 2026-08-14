@@ -460,19 +460,20 @@ const MBTI_META = {
 };
 
 // 画像フォールバック: animal_MBTI.png → animal_MBTI.svg → animal.png → 絵文字
-window._imgFallback = function(img, akey, mt, emoji) {
-  const src = img.src;
-  if (src.endsWith(akey+'_'+mt+'.png')) {
-    img.src = akey+'_'+mt+'.svg';
-  } else if (src.endsWith(akey+'_'+mt+'.svg')) {
-    img.src = akey+'.png';
-  } else {
-    img.style.display = 'none';
-    img.nextElementSibling.style.display = 'block';
-  }
+// 16ポジションをアイコン用に4系統（GK/DF/MF/FW）へ集約
+const POSITION_ICON = {
+  GK:'gk', SGK:'gk',
+  CB:'df', SB:'df', WB:'df', LB:'df', AN:'df',
+  VOL:'mf', IH:'mf', OMF:'mf', SH:'mf', REG:'mf',
+  WG:'fw', WH:'fw', ST2:'fw', CF:'fw',
 };
 
-function makeSticker(animal, mt) {
+window._imgFallback = function(img, emoji) {
+  img.style.display = 'none';
+  img.nextElementSibling.style.display = 'block';
+};
+
+function makeSticker(animal, mt, posKey) {
   const meta = MBTI_META[mt];
   const [c1, c2] = meta.color;
   const decos = [
@@ -486,14 +487,16 @@ function makeSticker(animal, mt) {
     return `<div class="sticker-deco" style="${style};animation-delay:${p.delay}">${meta.deco}</div>`;
   }).join('');
 
+  const poseFile = 'pose_' + (POSITION_ICON[posKey] || 'mf') + '.svg';
+
   return `
     <div class="sticker-wrap">
       ${decoHtml}
       <div class="sticker-bg" style="background:linear-gradient(145deg,${c1},${c2})">
         <img class="sticker-img"
-          src="${animal.key}_${mt}.png"
-          onerror="_imgFallback(this,'${animal.key}','${mt}','${animal.emoji}')"
-          alt="${animal.name}">
+          src="${poseFile}"
+          onerror="_imgFallback(this,'${animal.emoji}')"
+          alt="${animal.name}がサッカーしているイラスト">
         <div class="sticker-animal" style="display:none">${animal.emoji}</div>
       </div>
       <div class="sticker-badge">${meta.badge}</div>
@@ -856,10 +859,17 @@ async function phaseStart() {
   );
 
   clearInput();
+  const btnWrap = document.createElement('div');
+  btnWrap.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
   const btn = document.createElement('button');
   btn.className = 'btn'; btn.textContent = '診断をスタート 🐾';
   btn.onclick = () => { addRow('診断をスタート 🐾','user'); phaseBirth(); };
-  inp.appendChild(btn);
+  const btnMatrix = document.createElement('button');
+  btnMatrix.className = 'btn btn-outline';
+  btnMatrix.textContent = '📊 動物×性格タイプの一覧を先に見る';
+  btnMatrix.onclick = () => window.open('matrix.html', '_blank');
+  btnWrap.append(btn, btnMatrix);
+  inp.appendChild(btnWrap);
 }
 
 async function phaseBirth() {
@@ -954,9 +964,9 @@ async function phaseResult() {
   const card = document.createElement('div');
   card.className = 'result-card';
   card.innerHTML = `
-    ${makeSticker(a, mt)}
+    ${makeSticker(a, mt, posKey)}
     <div class="big-emoji">${pos.emoji}</div>
-    <div class="animal-name">あなたは${pos.name}タイプ！</div>
+    <div class="animal-name">${a.name}で${m.name}のあなたは${pos.name}！</div>
     <div class="mbti-badge">${posKey}</div>
     <div class="sub" style="margin-top:6px">${a.name}（動物タイプ）× ${mt}（性格タイプ）から診断</div>
     <div class="phrase-box">💬 ${pos.keyword}</div>
@@ -987,10 +997,11 @@ async function phaseResult() {
 
   row.append(av, card);
   chat.appendChild(row);
-  scroll();
+  // 結果カードは縦に長いので、下端ではなくカード上端が見える位置までスクロール
+  row.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   await wait(600);
-  await botSay(`あなたのポジションは「<b>${pos.emoji} ${pos.name}</b>」です✨<br>（${a.name}×${mt}タイプから診断）<br>どうでしたか？当たってましたか？😊`, 800);
+  await botSay(`「<b>${a.name}で${m.name}のあなたは${pos.emoji}${pos.name}！</b>」です✨<br>どうでしたか？当たってましたか？😊`, 800);
 
   clearInput();
   const btnWrap = document.createElement('div');

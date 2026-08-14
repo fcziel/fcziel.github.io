@@ -523,19 +523,28 @@
 
   <section id="soccer-news-section" class="section-dark" style="padding:1.5rem 0">
     <div class="container" style="max-width:640px">
-      <p style="font-size:0.78rem;color:var(--gold-lt);font-weight:700;letter-spacing:0.05em;margin-bottom:0.8rem">⚽ サッカーニュース</p>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.8rem">
+        <p style="font-size:0.78rem;color:var(--gold-lt);font-weight:700;letter-spacing:0.05em;margin:0">⚽ サッカーニュース</p>
+        <p id="soccer-news-updated" style="font-size:0.68rem;color:#6B7280;margin:0"></p>
+      </div>
       <ul id="soccer-news-list" style="list-style:none;display:flex;flex-direction:column;gap:0.6rem"></ul>
     </div>
   </section>
   <script>
-    fetch('soccer-news.json').then(r => r.ok ? r.json() : []).then(items => {
+    fetch('soccer-news.json').then(r => r.ok ? r.json() : null).then(data => {
       const ul = document.getElementById('soccer-news-list');
+      const updatedEl = document.getElementById('soccer-news-updated');
+      if (!data) return;
+      const items = Array.isArray(data) ? data : (data.items || []);
       if (!ul || !items.length) return;
-      ul.innerHTML = items.slice(0, 5).map(it =>
+      ul.innerHTML = items.slice(0, 10).map(it =>
         `<li><a href="${it.link}" target="_blank" rel="noopener" style="font-size:0.85rem;color:#9CA3AF;text-decoration:none;line-height:1.55">
           <span style="color:var(--gold)">・</span>${it.title}
         </a></li>`
       ).join('');
+      if (updatedEl && !Array.isArray(data) && data.updated_at) {
+        updatedEl.textContent = `最終更新: ${data.updated_at}`;
+      }
     }).catch(() => {});
   </script>
 

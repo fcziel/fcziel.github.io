@@ -5,11 +5,13 @@ import json
 import re
 import urllib.request
 import xml.etree.ElementTree as ET
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 RSS_URL = "https://news.google.com/rss/search?q=%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC&hl=ja&gl=JP&ceid=JP:ja"
 OUT_PATH = Path(__file__).parent.parent / "soccer-news.json"
-MAX_ITEMS = 5
+MAX_ITEMS = 10
+JST = timezone(timedelta(hours=9))
 
 
 def strip_source_suffix(title: str) -> str:
@@ -30,8 +32,12 @@ def main():
         if title and link:
             items.append({"title": title, "link": link})
 
+    payload = {
+        "updated_at": datetime.now(JST).strftime("%Y-%m-%d %H:%M"),
+        "items": items,
+    }
     OUT_PATH.write_text(
-        json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8"
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     print(f"取得件数: {len(items)} -> {OUT_PATH}")
 

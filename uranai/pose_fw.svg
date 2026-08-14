@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+<circle cx="160" cy="160" r="148" fill="white"/>
+<filter id="gl"><feGaussianBlur stdDeviation="3"/></filter>
+<circle cx="160" cy="160" r="146" fill="rgba(255,255,255,0.6)" filter="url(#gl)"/>
+
+<!-- 耳 -->
+<ellipse cx="108" cy="78" rx="24" ry="32" fill="#E8C99A" stroke="#222" stroke-width="3.5" transform="rotate(-18 108 78)"/>
+<ellipse cx="212" cy="78" rx="24" ry="32" fill="#E8C99A" stroke="#222" stroke-width="3.5" transform="rotate(18 212 78)"/>
+<ellipse cx="108" cy="80" rx="12" ry="18" fill="#F7E3CC" transform="rotate(-18 108 80)"/>
+<ellipse cx="212" cy="80" rx="12" ry="18" fill="#F7E3CC" transform="rotate(18 212 80)"/>
+
+<!-- 体（ゴールドユニフォーム） -->
+<ellipse cx="160" cy="228" rx="74" ry="68" fill="#D4A01A" stroke="#222" stroke-width="3.5"/>
+<path d="M132,175 L160,200 L188,175" fill="none" stroke="#1C2B4A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+<!-- 顔（自信ありげな表情） -->
+<ellipse cx="160" cy="122" rx="66" ry="62" fill="#F5DCC0" stroke="#222" stroke-width="3.5"/>
+<path d="M120,108 Q132,100 144,108" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M176,108 Q188,100 200,108" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="132" cy="116" r="9" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="132" cy="116" r="6" fill="#111"/>
+<circle cx="130" cy="114" r="2" fill="white"/>
+<circle cx="188" cy="116" r="9" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="188" cy="116" r="6" fill="#111"/>
+<circle cx="186" cy="114" r="2" fill="white"/>
+<path d="M140 140 Q160 152 180 140" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+<ellipse cx="118" cy="132" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)"/>
+<ellipse cx="202" cy="132" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)"/>
+
+<!-- ゴールネット -->
+<rect x="210" y="46" width="70" height="52" rx="4" fill="white" stroke="#222" stroke-width="3"/>
+<path d="M214,56 L274,56 M214,66 L262,66 M214,76 L270,76 M214,86 L257,86" fill="none" stroke="#88AACC" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M227,59 L227,91 M247,59 L247,91" fill="none" stroke="#88AACC" stroke-width="1" stroke-linecap="round"/>
+
+<!-- シュートを放つボール＋軌跡 -->
+<path d="M100,220 Q150,150 205,90" fill="none" stroke="#D4A01A" stroke-width="3" stroke-dasharray="2,7" stroke-linecap="round" opacity="0.75"/>
+<circle cx="92" cy="230" r="19" fill="white" stroke="#222" stroke-width="3"/>
+<polygon points="92,220 99,225 96,233 88,233 85,225" fill="#222"/>
+</svg>
