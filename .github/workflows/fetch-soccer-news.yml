@@ -1,0 +1,23 @@
+name: サッカーニュース取得
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # 6時間ごと
+  workflow_dispatch:        # 手動実行も可能
+
+jobs:
+  fetch-news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: RSS取得・JSON生成
+        run: python3 scripts/fetch_soccer_news.py
+
+      - name: 変更があればコミット・プッシュ
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add soccer-news.json
+          git diff --cached --quiet || git commit -m "[自動更新] サッカーニュース"
+          git diff --cached --quiet || git push

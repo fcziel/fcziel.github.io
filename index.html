@@ -52,6 +52,7 @@
       <a href="location.html" data-i18n="nav-location">活動場所</a>
       <a href="results.html" data-i18n="nav-results">試合結果</a>
       <a href="join.html" data-i18n="nav-join">募集</a>
+      <a href="uranai/index.html" target="_blank">⚽ポジション診断</a>
     </div>
     <div class="lang-switcher">
       <button onclick="setLang('ja')" data-lang="ja" class="lang-btn active">JP</button>
@@ -105,6 +106,12 @@
       <h2 class="section-title" data-i18n-html="news-title">お知らせ・<span>試合日程</span></h2>
       <div class="news-list">
         <!-- NEWS_INSERT -->
+
+        <div class="news-item news-info">
+          <span class="news-tag tag-info" data-i18n="tag-info">お知らせ</span>
+          <span class="news-date">8/14</span>
+          <span class="news-body">遊び心コンテンツ「⚽サッカーポジション診断」を公開しました！ナビの「ポジション診断」からどうぞ。</span>
+        </div>
 
         <div class="news-item news-info">
           <span class="news-tag tag-info" data-i18n="tag-info">お知らせ</span>
@@ -508,6 +515,23 @@
       }
     });
   </script>
+
+  <section style="padding:1.5rem 0 0.5rem;background:var(--gray)">
+    <div class="container" style="max-width:640px">
+      <p style="font-size:0.72rem;color:var(--muted);font-weight:700;letter-spacing:0.05em;margin-bottom:0.6rem">⚽ サッカーニュース</p>
+      <ul id="soccer-news-list" style="list-style:none;display:flex;flex-direction:column;gap:0.5rem"></ul>
+    </div>
+  </section>
+  <script>
+    fetch('soccer-news.json').then(r => r.ok ? r.json() : []).then(items => {
+      const ul = document.getElementById('soccer-news-list');
+      if (!ul || !items.length) return;
+      ul.innerHTML = items.slice(0, 5).map(it =>
+        `<li><a href="${it.link}" target="_blank" rel="noopener" style="font-size:0.82rem;color:var(--muted);text-decoration:none;line-height:1.5">・${it.title}</a></li>`
+      ).join('');
+    }).catch(() => {});
+  </script>
+
   <footer>
     <span class="footer-logo">FC ZIEL</span>
     <p style="margin-bottom:0.5rem"><a href="faq.html" style="color:#6B7280;text-decoration:none;font-size:0.82rem" data-i18n="footer-faq">よくある質問（FAQ）</a></p>

@@ -6,11 +6,14 @@
 <title>サッカーポジション診断</title>
 <style>
 :root {
-  --green: #06C755;
-  --green-dark: #05A847;
-  --green-light: #E8F9F0;
+  --gold: #D4A01A;
+  --gold-lt: #F5C842;
+  --gold-dark: #A87D14;
+  --gold-pale: #FBF0D9;
+  --dark: #0D1117;
+  --navy: #1C2B4A;
   --bg: #EDEDED;
-  --header-bg: #06C755;
+  --header-bg: #0D1117;
   --white: #FFFFFF;
   --text: #1A1A1A;
   --text-sub: #888;
@@ -29,7 +32,7 @@ body {
 /* ── ヘッダー ── */
 .header {
   background: var(--header-bg);
-  color: #fff;
+  color: var(--gold);
   padding: 12px 16px;
   text-align: center;
   font-size: 15px;
@@ -38,7 +41,7 @@ body {
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   flex-shrink: 0;
 }
-.header small { font-size: 11px; font-weight: normal; opacity: .85; display: block; }
+.header small { font-size: 11px; font-weight: normal; color: #fff; opacity: .75; display: block; }
 
 /* ── チャットエリア ── */
 #chat {
@@ -56,7 +59,7 @@ body {
 
 .avatar {
   width: 34px; height: 34px; border-radius: 50%;
-  background: var(--green); flex-shrink: 0;
+  background: var(--gold); flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   font-size: 17px; box-shadow: var(--shadow);
 }
@@ -71,7 +74,7 @@ body {
   border-radius: var(--radius-bubble) var(--radius-bubble) var(--radius-bubble) 4px;
 }
 .user .bubble {
-  background: var(--green); color: #fff;
+  background: var(--gold); color: var(--dark);
   border-radius: var(--radius-bubble) var(--radius-bubble) 4px var(--radius-bubble);
 }
 
@@ -96,20 +99,20 @@ body {
 
 /* ボタン */
 .btn {
-  background: var(--green); color: #fff;
+  background: var(--gold); color: var(--dark);
   border: none; border-radius: 24px;
   padding: 11px 22px; font-size: 14px; font-weight: bold;
   cursor: pointer; font-family: inherit;
   transition: background .15s, transform .1s;
   width: 100%;
 }
-.btn:active { background: var(--green-dark); transform: scale(.97); }
+.btn:active { background: var(--gold-dark); transform: scale(.97); }
 
 .btn-outline {
-  background: #fff; color: var(--green);
-  border: 2px solid var(--green);
+  background: #fff; color: var(--gold-dark);
+  border: 2px solid var(--gold);
 }
-.btn-outline:active { background: var(--green-light); }
+.btn-outline:active { background: var(--gold-pale); }
 
 /* 日付入力 */
 .date-row { display: flex; gap: 8px; align-items: center; }
@@ -119,7 +122,7 @@ body {
   font-size: 14px; font-family: inherit; outline: none;
   transition: border-color .2s;
 }
-.date-row input[type=date]:focus { border-color: var(--green); }
+.date-row input[type=date]:focus { border-color: var(--gold); }
 .date-row .btn { width: auto; padding: 10px 20px; }
 
 /* 選択肢 */
@@ -131,8 +134,8 @@ body {
   cursor: pointer; font-family: inherit; color: var(--text);
   transition: all .15s;
 }
-.choice:active { background: var(--green-light); border-color: var(--green); }
-.choice.picked { background: var(--green); color: #fff; border-color: var(--green); }
+.choice:active { background: var(--gold-pale); border-color: var(--gold); }
+.choice.picked { background: var(--gold); color: var(--dark); border-color: var(--gold); }
 
 /* プログレス */
 .progress-header {
@@ -140,7 +143,7 @@ body {
   font-size: 11px; color: var(--text-sub); margin-bottom: 5px;
 }
 .progress-bar { height: 6px; background: #ddd; border-radius: 3px; margin-bottom: 9px; }
-.progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width .3s; }
+.progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width .3s; }
 .q-label {
   font-size: 13px; font-weight: bold; color: var(--text);
   margin-bottom: 8px; line-height: 1.6;
@@ -154,30 +157,30 @@ body {
   max-width: 100%;
 }
 .result-card .big-emoji { font-size: 64px; margin-bottom: 4px; }
-.result-card .animal-name { font-size: 22px; font-weight: bold; color: var(--green); }
-.result-card .sub { font-size: 12px; color: var(--text-sub); margin: 2px 0 10px; }
+.result-card .animal-name { font-size: 22px; font-weight: bold; color: var(--gold-dark); }
+.result-card .sub { font-size: 13px; color: var(--navy); font-weight: 600; margin: 4px 0 10px; }
 .mbti-badge {
-  display: inline-block; background: var(--green); color: #fff;
+  display: inline-block; background: var(--navy); color: var(--gold-lt);
   border-radius: 8px; padding: 5px 18px;
   font-size: 22px; font-weight: bold; letter-spacing: 3px;
 }
 .phrase-box {
-  background: var(--green-light); border-left: 4px solid var(--green);
+  background: var(--gold-pale); border-left: 4px solid var(--gold);
   border-radius: 8px; padding: 12px 14px;
-  font-size: 15px; font-weight: bold; color: #047A3B;
+  font-size: 15px; font-weight: bold; color: var(--dark);
   text-align: left; margin: 14px 0 10px;
   line-height: 1.6;
 }
-.section { text-align: left; margin-top: 14px; }
+.section { text-align: left; margin-top: 18px; }
 .section h3 {
-  font-size: 12px; color: var(--text-sub);
-  border-bottom: 1px solid #eee; padding-bottom: 4px; margin-bottom: 7px;
+  font-size: 16px; color: var(--navy); font-weight: 800;
+  border-bottom: 2px solid var(--gold); padding-bottom: 5px; margin-bottom: 9px;
 }
-.section p { font-size: 13px; color: var(--text); line-height: 1.7; }
-.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.section p { font-size: 15px; color: var(--text); line-height: 1.75; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .tag {
-  background: var(--green-light); color: #047A3B;
-  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: bold;
+  background: var(--gold-pale); color: var(--gold-dark);
+  border-radius: 20px; padding: 4px 12px; font-size: 12.5px; font-weight: bold;
 }
 .divider { border: none; border-top: 1px solid #eee; margin: 12px 0; }
 
@@ -892,6 +895,9 @@ async function phaseResult() {
     <div class="mbti-badge">${posKey}</div>
     <div class="sub" style="margin-top:6px">${a.name}（動物タイプ）× ${mt}（性格タイプ）から診断</div>
     <div class="phrase-box">💬 ${pos.keyword}</div>
+    <p style="font-size:13.5px;color:var(--text-sub);text-align:left;margin:0 0 4px;line-height:1.6">
+      🐾${a.name}の「${a.keyword}」× 🧠${mt}（${m.name}）の「${m.kw}」という特徴を掛け合わせて診断しました。
+    </p>
     <hr class="divider">
     <div class="section">
       <h3>${pos.emoji} ${pos.name}タイプの特徴</h3>
