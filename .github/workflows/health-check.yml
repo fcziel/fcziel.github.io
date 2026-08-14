@@ -1,6 +1,5 @@
 name: サイト健全性チェック
 
-<<<<<<< HEAD
 on:
   schedule:
     - cron: '0 0 * * 1'  # 毎週月曜 09:00 JST
@@ -11,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
 
       - name: results.html チェック
         id: check_results
@@ -103,65 +104,3 @@ jobs:
               body: `## サイト健全性チェック\n\n破損が検出されたため、直前の正常バージョンに自動修復しました。\n\n確認してください: https://fcziel.github.io\n\n実行日時: ${new Date().toLocaleString('ja-JP', {timeZone: 'Asia/Tokyo'})}`,
               labels: ['bug']
             });
-=======
-  on:
-    schedule:
-      - cron: '0 0 * * 1'
-    workflow_dispatch:
-
-  jobs:
-    health-check:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 50
-
-        - name: ファイルチェック
-          id: check
-          run: |
-            BROKEN=false
-            for FILE in results.html index.html faq.html; do
-              if grep -q "移動する" $FILE || ! grep -q "FC ZIEL" $FILE; then
-                echo "$FILE が破損しています"
-                BROKEN=true
-              else
-                echo "$FILE: OK"
-              fi
-            done
-            echo "broken=$BROKEN" >> $GITHUB_OUTPUT
-
-        - name: 自動修復
-          if: steps.check.outputs.broken == 'true'
-          run: |
-            for FILE in results.html index.html faq.html; do
-              COMMITS=$(git log --format="%H" -- $FILE | head -20)
-              for COMMIT in $COMMITS; do
-                CONTENT=$(git show $COMMIT:$FILE 2>/dev/null)
-                if echo "$CONTENT" | grep -q "FC ZIEL" && ! echo "$CONTENT" | grep -q "移動する"; then
-                  git show $COMMIT:$FILE > $FILE
-                  echo "$FILE を $COMMIT から復元"
-                  break
-                fi
-              done
-            done
-            git config user.name "GitHub Actions"
-            git config user.email "actions@github.com"
-            git add results.html index.html faq.html
-            git diff --cached --quiet || git commit -m "[自動修復] 破損ファイルを復元"
-            git push
-
-        - name: Issue作成
-          if: steps.check.outputs.broken == 'true'
-          uses: actions/github-script@v7
-          with:
-            script: |
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: '⚠️ サイト破損を検出・自動修復しました',
-                body: `破損が検出されたため自動修復しました。\n\n確認: https://fcziel.github.io\n\n実行日時: ${new
-  Date().toLocaleString('ja-JP', {timeZone: 'Asia/Tokyo'})}`,
-                labels: ['bug']
-              });
->>>>>>> 9cc67fbe33fbacfc11b7433f08a87ce12689d1ae
