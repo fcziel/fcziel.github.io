@@ -307,59 +307,113 @@ const ANIMALS = [
 // ══════════════════════════════════════════════
 
 const POSITIONS = {
-  GK: { name:'ゴールキーパー', emoji:'🧤',
+  GK:  { name:'ゴールキーパー', emoji:'🧤',
     keyword:'最後の砦を守る冷静な守護神',
     desc:'孤独な持ち場でも動じない集中力と判断力を持つタイプ。チーム全体を見渡し、ピンチの瞬間に頼れる存在。',
     tags:['冷静沈着','高い集中力','責任感が強い','判断力に優れる'] },
-  DF: { name:'ディフェンダー', emoji:'🛡️',
-    keyword:'堅実にチームを支える守りの要',
-    desc:'着実で粘り強く、失点を防ぐために体を張れるタイプ。地味に見えて実はチームの土台を作る縁の下の力持ち。',
-    tags:['堅実','粘り強い','協調性がある','安定感がある'] },
-  MF: { name:'ミッドフィルダー', emoji:'🎯',
-    keyword:'攻守をつなぐ司令塔',
-    desc:'視野が広く、状況に応じて攻めにも守りにも顔を出せるバランス型。チームの流れを作るキーパーソン。',
-    tags:['視野が広い','バランス感覚','臨機応変','コミュニケーション上手'] },
-  FW: { name:'フォワード', emoji:'🔥',
-    keyword:'ゴールに向かって突き進むエースタイプ',
+  CB:  { name:'センターバック', emoji:'🛡️',
+    keyword:'堅牢な最終ラインの要',
+    desc:'着実で粘り強く、体を張って失点を防ぐ守備の中心。地味に見えて実はチームの土台を作る縁の下の力持ち。',
+    tags:['堅実','粘り強い','冷静','安定感がある'] },
+  SB:  { name:'サイドバック', emoji:'🏃',
+    keyword:'攻守にわたって幅を作る運動量豊富なタイプ',
+    desc:'守備をこなしつつ攻撃参加もできるスタミナ自慢。地道な上下動でチームを支える働き者。',
+    tags:['スタミナ豊富','堅実','臨機応変','縁の下の力持ち'] },
+  WB:  { name:'ウィングバック', emoji:'🚀',
+    keyword:'攻撃的に駆け上がる推進力',
+    desc:'サイドを制圧し、守備から一転して鋭い攻め上がりを見せるタイプ。攻守両方でスピードを武器にする。',
+    tags:['行動力がある','スピード重視','攻撃的','スタミナ豊富'] },
+  LB:  { name:'リベロ', emoji:'🕊️',
+    keyword:'自由な発想で最終ラインを統率する司令塔',
+    desc:'守備ラインの一番後ろから試合を組み立てる、独自の視点を持つ孤高のタイプ。誰にも縛られない自由な判断力が武器。',
+    tags:['独立心旺盛','視野が広い','冷静','美意識が高い'] },
+  AN:  { name:'アンカー', emoji:'⚓',
+    keyword:'中盤の底で守備を統率する規律型',
+    desc:'一人でスペースを消し、チーム全体のバランスを整える縁の下の存在。派手さはないが欠かせない安定感。',
+    tags:['規律を守る','冷静沈着','守備意識が高い','責任感が強い'] },
+  VOL: { name:'ボランチ', emoji:'🧭',
+    keyword:'攻守のバランスを取る中盤の心臓',
+    desc:'攻撃と守備どちらにも顔を出し、チーム全体の調和を保つバランス型。周りを見て動ける協調性の持ち主。',
+    tags:['バランス感覚','協調性がある','視野が広い','頼りがいがある'] },
+  IH:  { name:'インサイドハーフ', emoji:'🔀',
+    keyword:'攻守に顔を出すオールラウンダー',
+    desc:'運動量とテクニックを兼ね備え、ピッチのあらゆる局面に絡めるタイプ。器用さと好奇心が武器。',
+    tags:['器用','好奇心旺盛','機動力がある','臨機応変'] },
+  OMF: { name:'トップ下', emoji:'🎨',
+    keyword:'創造性でチャンスを演出する司令塔',
+    desc:'自由な発想でラストパスを供給する、攻撃の起点となるタイプ。豊かな感性でゲームを彩る。',
+    tags:['創造力がある','感性豊か','理想主義','視野が広い'] },
+  SH:  { name:'シャドー', emoji:'🌒',
+    keyword:'相手の背後を狙う得点感覚',
+    desc:'前線の影から急に飛び出してゴールを狙う、瞬発力と決定力を兼ね備えたタイプ。',
+    tags:['決定力がある','瞬発力がある','大胆','勝負強い'] },
+  REG: { name:'レジスタ', emoji:'🎼',
+    keyword:'深い位置から試合を組み立てる知性派',
+    desc:'冷静に試合全体を俯瞰し、正確なパスでリズムを作る司令塔。派手さより完成度を追求するタイプ。',
+    tags:['知的','完璧主義','冷静','視野が広い'] },
+  WG:  { name:'ウィング', emoji:'🪽',
+    keyword:'スピードとドリブルで局面を打開',
+    desc:'タッチライン際で相手を置き去りにする、圧倒的なスピードと勝負強さを持つタイプ。',
+    tags:['スピード重視','行動力がある','チャレンジ精神','目立ちたがり屋'] },
+  WH:  { name:'ウィングハーフ', emoji:'🌪️',
+    keyword:'幅広く駆け回りチャンスを演出',
+    desc:'サイドを縦横無尽に動き回り、攻守両面でチームに幅をもたらすタイプ。社交性と機動力が武器。',
+    tags:['社交的','機動力がある','臨機応変','愛嬌がある'] },
+  ST2: { name:'セカンドトップ', emoji:'🥈',
+    keyword:'エースを引き立てつつ得点も狙う',
+    desc:'味方を活かしながら、自らもゴールを狙う欲張りなタイプ。情熱と献身のバランス型アタッカー。',
+    tags:['情熱的','献身的','決定力がある','理想主義'] },
+  CF:  { name:'センターフォワード', emoji:'🔥',
+    keyword:'ゴールに直結する得点力を持つエース',
     desc:'目立つ場所で結果を出すことに喜びを感じる、勝負強いタイプ。チャンスを逃さない決定力が武器。',
-    tags:['勝負強い','行動力がある','決定力がある','目立ちたがり屋'] },
+    tags:['勝負強い','行動力がある','決定力がある','自信家'] },
+  SGK: { name:'第3ゴールキーパー', emoji:'🧢',
+    keyword:'出番は少なくてもチームに欠かせない存在',
+    desc:'試合に出ることは少なくても、練習相手・ムードメーカーとしてチームを支える縁の下の力持ち。スタメンだけがチームじゃないと知っている、誰より心の広いタイプ。',
+    tags:['支える力がある','献身的','癒し系','チーム愛が強い'] },
 };
 
-// 動物タイプ別のポジション適性スコア（GK, DF, MF, FW）
+// 動物タイプ別のポジション適性スコア（16ポジション）
 const ANIMAL_POS = {
-  wolf:     { GK:2, DF:1, MF:0, FW:1 },
-  tanuki:   { GK:0, DF:1, MF:2, FW:1 },
-  lion:     { GK:0, DF:0, MF:1, FW:2 },
-  koala:    { GK:1, DF:2, MF:0, FW:0 },
-  cheetah:  { GK:0, DF:0, MF:0, FW:3 },
-  elephant: { GK:1, DF:3, MF:0, FW:0 },
-  sheep:    { GK:0, DF:1, MF:2, FW:0 },
-  monkey:   { GK:0, DF:0, MF:3, FW:0 },
-  pegasus:  { GK:0, DF:0, MF:1, FW:2 },
-  deer:     { GK:1, DF:0, MF:2, FW:0 },
-  leopard:  { GK:3, DF:0, MF:0, FW:0 },
-  bear:     { GK:0, DF:2, MF:1, FW:0 },
+  wolf:     { LB:2, GK:1 },
+  tanuki:   { SB:2, WH:1 },
+  lion:     { CF:2, ST2:1 },
+  koala:    { SGK:2, WB:1 },
+  cheetah:  { WG:2, WB:1 },
+  elephant: { CB:2, AN:1 },
+  sheep:    { VOL:2, SGK:1 },
+  monkey:   { IH:2, WH:1 },
+  pegasus:  { OMF:2, ST2:1 },
+  deer:     { SH:2, REG:1 },
+  leopard:  { REG:2, LB:1 },
+  bear:     { GK:1, VOL:1, AN:1 },
 };
 
-// MBTIの各軸別のポジション適性スコア
+// MBTIの各軸別のポジション適性スコア（16ポジション、各ポジションが必ず2軸から支持を受けるよう均等配分）
 const MBTI_AXIS_POS = {
-  E:{ GK:0, DF:0, MF:1, FW:2 },  I:{ GK:2, DF:1, MF:0, FW:0 },
-  S:{ GK:1, DF:2, MF:0, FW:0 },  N:{ GK:0, DF:0, MF:2, FW:1 },
-  T:{ GK:1, DF:2, MF:0, FW:0 },  F:{ GK:0, DF:0, MF:2, FW:1 },
-  J:{ GK:1, DF:2, MF:0, FW:0 },  P:{ GK:0, DF:0, MF:1, FW:2 },
+  E:{ WB:1, WG:1, WH:1, CF:1 },
+  I:{ GK:1, LB:1, AN:1, REG:1 },
+  S:{ CB:1, SB:1, VOL:1, AN:1 },
+  N:{ OMF:1, SH:1, ST2:1, WH:1 },
+  T:{ GK:1, CB:1, VOL:1, REG:1 },
+  F:{ IH:1, SGK:1, WG:1, CF:1 },
+  J:{ SB:1, LB:1, OMF:1, SH:1 },
+  P:{ ST2:1, IH:1, SGK:1, WB:1 },
 };
+
+const POSITION_ORDER = ['GK','CB','SB','WB','LB','AN','VOL','IH','OMF','SH','REG','WG','WH','ST2','CF','SGK'];
 
 function getPosition(animalKey, mt) {
-  const score = { GK:0, DF:0, MF:0, FW:0 };
+  const score = {}; POSITION_ORDER.forEach(k => score[k] = 0);
   const a = ANIMAL_POS[animalKey] || {};
   for (const k in score) score[k] += (a[k] || 0);
   mt.split('').forEach(letter => {
     const axis = MBTI_AXIS_POS[letter];
     if (!axis) return;
-    for (const k in score) score[k] += axis[k];
+    for (const k in score) score[k] += (axis[k] || 0);
   });
-  // 最高得点のポジションを採用（同点はGK→DF→MF→FWの優先順）
-  const order = ['GK','DF','MF','FW'];
+  // 最高得点のポジションを採用（同点はPOSITION_ORDERの並び順を優先）
+  const order = POSITION_ORDER;
   let best = order[0];
   order.forEach(k => { if (score[k] > score[best]) best = k; });
   return best;
@@ -789,7 +843,18 @@ let state = {};
 
 async function phaseStart() {
   await botSay('こんにちは！⚽<br>あなたに向いてるサッカーポジション診断へようこそ！', 400);
-  await botSay('生年月日と20の質問に答えるだけで<br>動物タイプ×性格タイプからGK/DF/MF/FWのどれが向いてるかわかります✨', 900);
+  await botSay('生年月日と20の質問に答えるだけで<br>動物タイプ×性格タイプからあなたのポジションが分かります✨', 900);
+
+  const pillsHtml = POSITION_ORDER.map(k => {
+    const p = POSITIONS[k];
+    return `<span style="display:inline-flex;align-items:center;gap:4px;background:var(--gold-pale);color:var(--gold-dark);border-radius:14px;padding:4px 10px;font-size:12px;font-weight:bold;white-space:nowrap">${p.emoji} ${p.name}</span>`;
+  }).join('');
+  await botSay(
+    `こんな16パターンに分かれるよ！🎉<br>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px">${pillsHtml}</div>`,
+    900
+  );
+
   clearInput();
   const btn = document.createElement('button');
   btn.className = 'btn'; btn.textContent = '診断をスタート 🐾';
