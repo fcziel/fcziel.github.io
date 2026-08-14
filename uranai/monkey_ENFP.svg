@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+<circle cx="160" cy="160" r="148" fill="white"/>
+<filter id="gl"><feGaussianBlur stdDeviation="3"/></filter>
+<circle cx="160" cy="160" r="146" fill="rgba(255,255,255,0.6)" filter="url(#gl)"/>
+<ellipse cx="160" cy="210" rx="70" ry="80" fill="#B8895F" stroke="#222" stroke-width="3.5" />
+<ellipse cx="160" cy="220" rx="42" ry="52" fill="#E8CBA0" stroke="#222" stroke-width="3.5" />
+<circle cx="97" cy="108" r="21" fill="#B8895F" stroke="#222" stroke-width="3" />
+<circle cx="223" cy="108" r="21" fill="#B8895F" stroke="#222" stroke-width="3" />
+<circle cx="97" cy="108" r="12" fill="#E8CBA0" />
+<circle cx="223" cy="108" r="12" fill="#E8CBA0" />
+<ellipse cx="160" cy="120" rx="68" ry="65" fill="#B8895F" stroke="#222" stroke-width="3.5" />
+<ellipse cx="160" cy="132" rx="50" ry="44" fill="#F0DAB8" stroke="#222" stroke-width="3.5" />
+<circle cx="132" cy="112" r="10" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="132" cy="112" r="7" fill="#111" stroke="none" stroke-width="0"/>
+<circle cx="129" cy="109" r="2.5" fill="white" stroke="none" stroke-width="0"/>
+<circle cx="188" cy="112" r="10" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="188" cy="112" r="7" fill="#111" stroke="none" stroke-width="0"/>
+<circle cx="185" cy="109" r="2.5" fill="white" stroke="none" stroke-width="0"/>
+<ellipse cx="160" cy="136" rx="10" ry="7" fill="#444" stroke="#c05050" stroke-width="1.5" />
+<path d="M142 150 Q160 158 178 150" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+<ellipse cx="117" cy="130" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)" stroke="none" stroke-width="0" />
+<ellipse cx="203" cy="130" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)" stroke="none" stroke-width="0" />
+<path d="M215,145 Q240,160 228,185" fill="none" stroke="#FF4040" stroke-width="5" stroke-linecap="round"/>
+<path d="M217,146 Q243,162 230,187" fill="none" stroke="#FF8C00" stroke-width="5" stroke-linecap="round"/>
+<path d="M219,147 Q246,164 232,189" fill="none" stroke="#FFD700" stroke-width="5" stroke-linecap="round"/>
+<path d="M221,148 Q249,166 234,191" fill="none" stroke="#50C850" stroke-width="5" stroke-linecap="round"/>
+<path d="M223,149 Q252,168 236,193" fill="none" stroke="#2080FF" stroke-width="5" stroke-linecap="round"/>
+<path d="M225,150 Q255,170 238,195" fill="none" stroke="#8040C0" stroke-width="5" stroke-linecap="round"/>
+<polygon points="82.0,41.0 85.29159741283785,50.469504831500295 95.31479122813215,50.673762078750734 87.32591649125285,56.73049516849971 90.22899353209462,66.32623792124926 82.0,60.6 73.77100646790538,66.32623792124926 76.67408350874715,56.73049516849971 68.68520877186785,50.67376207875074 78.70840258716215,50.469504831500295" fill="#FFE040" stroke="#222" stroke-width="3"/>
+<polygon points="255.0,49.0 257.5862551100869,56.44032522475023 265.46162167924666,56.60081306187558 259.18464867169865,61.35967477524977 261.4656377752172,68.89918693812442 255.0,64.4 248.5343622247828,68.89918693812442 250.81535132830132,61.35967477524977 244.5383783207533,56.60081306187558 252.41374488991312,56.44032522475023" fill="#FF80A0" stroke="#222" stroke-width="3"/>
+<polygon points="75.0,81.0 77.1160269082529,87.08753882025019 83.55950864665638,87.21884705062547 78.42380345866255,91.11246117974981 80.29006727063226,97.28115294937453 75.0,93.6 69.70993272936774,97.28115294937453 71.57619654133745,91.11246117974981 66.44049135334362,87.21884705062547 72.8839730917471,87.08753882025019" fill="#80C0FF" stroke="#222" stroke-width="3"/>
+
+</svg>
