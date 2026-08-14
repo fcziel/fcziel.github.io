@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サッカーポジション診断</title>
+<style>
+:root {
+  --green: #06C755;
+  --green-dark: #05A847;
+  --green-light: #E8F9F0;
+  --bg: #EDEDED;
+  --header-bg: #06C755;
+  --white: #FFFFFF;
+  --text: #1A1A1A;
+  --text-sub: #888;
+  --shadow: 0 1px 2px rgba(0,0,0,0.15);
+  --radius-bubble: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, 'Hiragino Sans', 'Meiryo', 'Yu Gothic', sans-serif;
+  background: var(--bg);
+  display: flex; flex-direction: column; height: 100%;
+  font-size: 15px;
+}
+
+/* ── ヘッダー ── */
+.header {
+  background: var(--header-bg);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: .5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  flex-shrink: 0;
+}
+.header small { font-size: 11px; font-weight: normal; opacity: .85; display: block; }
+
+/* ── チャットエリア ── */
+#chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 12px 8px;
+  display: flex; flex-direction: column; gap: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── バブル ── */
+.row { display: flex; align-items: flex-end; gap: 7px; animation: fadeUp .25s ease; }
+.row.bot { justify-content: flex-start; }
+.row.user { justify-content: flex-end; }
+
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; box-shadow: var(--shadow);
+}
+
+.bubble {
+  max-width: 72%; padding: 10px 14px;
+  font-size: 14px; line-height: 1.65;
+  box-shadow: var(--shadow); word-break: break-word;
+}
+.bot .bubble {
+  background: var(--white); color: var(--text);
+  border-radius: var(--radius-bubble) var(--radius-bubble) var(--radius-bubble) 4px;
+}
+.user .bubble {
+  background: var(--green); color: #fff;
+  border-radius: var(--radius-bubble) var(--radius-bubble) 4px var(--radius-bubble);
+}
+
+/* タイピング */
+.typing { display: flex; gap: 5px; padding: 12px 16px; align-items: center; }
+.typing span {
+  width: 8px; height: 8px; background: #bbb; border-radius: 50%;
+  animation: bounce .9s infinite;
+}
+.typing span:nth-child(2) { animation-delay: .2s; }
+.typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes bounce { 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(-5px);opacity:1} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── 入力エリア ── */
+#input-area {
+  background: #f7f7f7;
+  border-top: 1px solid #ddd;
+  padding: 10px 12px;
+  flex-shrink: 0;
+}
+
+/* ボタン */
+.btn {
+  background: var(--green); color: #fff;
+  border: none; border-radius: 24px;
+  padding: 11px 22px; font-size: 14px; font-weight: bold;
+  cursor: pointer; font-family: inherit;
+  transition: background .15s, transform .1s;
+  width: 100%;
+}
+.btn:active { background: var(--green-dark); transform: scale(.97); }
+
+.btn-outline {
+  background: #fff; color: var(--green);
+  border: 2px solid var(--green);
+}
+.btn-outline:active { background: var(--green-light); }
+
+/* 日付入力 */
+.date-row { display: flex; gap: 8px; align-items: center; }
+.date-row input[type=date] {
+  flex: 1; padding: 10px 12px;
+  border: 2px solid #ddd; border-radius: 24px;
+  font-size: 14px; font-family: inherit; outline: none;
+  transition: border-color .2s;
+}
+.date-row input[type=date]:focus { border-color: var(--green); }
+.date-row .btn { width: auto; padding: 10px 20px; }
+
+/* 選択肢 */
+.choices { display: flex; flex-direction: column; gap: 7px; }
+.choice {
+  background: #fff; border: 2px solid #ddd;
+  border-radius: 12px; padding: 11px 14px;
+  font-size: 13px; line-height: 1.55; text-align: left;
+  cursor: pointer; font-family: inherit; color: var(--text);
+  transition: all .15s;
+}
+.choice:active { background: var(--green-light); border-color: var(--green); }
+.choice.picked { background: var(--green); color: #fff; border-color: var(--green); }
+
+/* プログレス */
+.progress-header {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-sub); margin-bottom: 5px;
+}
+.progress-bar { height: 6px; background: #ddd; border-radius: 3px; margin-bottom: 9px; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width .3s; }
+.q-label {
+  font-size: 13px; font-weight: bold; color: var(--text);
+  margin-bottom: 8px; line-height: 1.6;
+}
+
+/* ── 結果カード ── */
+.result-card {
+  background: #fff; border-radius: 16px;
+  padding: 20px 16px; text-align: center;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+  max-width: 100%;
+}
+.result-card .big-emoji { font-size: 64px; margin-bottom: 4px; }
+.result-card .animal-name { font-size: 22px; font-weight: bold; color: var(--green); }
+.result-card .sub { font-size: 12px; color: var(--text-sub); margin: 2px 0 10px; }
+.mbti-badge {
+  display: inline-block; background: var(--green); color: #fff;
+  border-radius: 8px; padding: 5px 18px;
+  font-size: 22px; font-weight: bold; letter-spacing: 3px;
+}
+.phrase-box {
+  background: var(--green-light); border-left: 4px solid var(--green);
+  border-radius: 8px; padding: 12px 14px;
+  font-size: 15px; font-weight: bold; color: #047A3B;
+  text-align: left; margin: 14px 0 10px;
+  line-height: 1.6;
+}
+.section { text-align: left; margin-top: 14px; }
+.section h3 {
+  font-size: 12px; color: var(--text-sub);
+  border-bottom: 1px solid #eee; padding-bottom: 4px; margin-bottom: 7px;
+}
+.section p { font-size: 13px; color: var(--text); line-height: 1.7; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.tag {
+  background: var(--green-light); color: #047A3B;
+  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: bold;
+}
+.divider { border: none; border-top: 1px solid #eee; margin: 12px 0; }
+
+/* スタンプ */
+.sticker-wrap {
+  position: relative; width: 160px; height: 160px;
+  margin: 0 auto 14px; flex-shrink: 0;
+}
+.sticker-bg {
+  width: 160px; height: 160px; border-radius: 32px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  position: relative; overflow: hidden;
+}
+.sticker-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(255,255,255,0.12); border-radius: 32px;
+}
+/* 画像スタンプ（ヨッシースタイル） */
+.sticker-img {
+  width: 140px; height: 140px; object-fit: contain;
+  position: relative; z-index: 1;
+  filter:
+    drop-shadow(0 0 3px #fff)
+    drop-shadow(0 0 6px #fff)
+    drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+  animation: stampPop .4s cubic-bezier(.17,.67,.35,1.3) both;
+}
+@keyframes stampPop {
+  0%   { transform: scale(0.5) rotate(-8deg); opacity: 0; }
+  70%  { transform: scale(1.12) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); }
+}
+/* 絵文字フォールバック */
+.sticker-animal { font-size: 80px; line-height: 1; position: relative; z-index: 1; }
+.sticker-badge {
+  position: absolute; bottom: -6px; right: -6px;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 28px; box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  border: 3px solid #fff; z-index: 2;
+}
+.sticker-deco {
+  position: absolute; font-size: 18px; z-index: 0; pointer-events: none;
+  animation: twinkle 2s infinite;
+}
+@keyframes twinkle { 0%,100%{opacity:.4;transform:scale(.8)} 50%{opacity:1;transform:scale(1.1)} }
+
+/* PC対応 */
+@media (min-width: 560px) {
+  #chat { padding: 20px; max-width: 560px; margin: 0 auto; width: 100%; }
+  #input-area { max-width: 560px; margin: 0 auto; width: 100%; }
+  .header { font-size: 16px; }
+  .bubble { max-width: 65%; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  ⚽ サッカーポジション診断
+  <small>動物タイプ ＋ 性格診断であなたのポジションが分かる</small>
+</div>
+<div id="chat"></div>
+<div id="input-area"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// データ
+// ══════════════════════════════════════════════
+
+const ANIMALS = [
+  { key:'wolf',    name:'オオカミ',   emoji:'🐺',
+    keyword:'孤高のカリスマ',
+    desc:'独自の美学と強い意志を持つ孤高の存在。一見近寄りがたいが、深く信頼した相手には熱い絆を結ぶ。',
+    tags:['独立心旺盛','直感力が高い','意志が強い','美意識が高い'] },
+  { key:'tanuki',  name:'タヌキ',     emoji:'🦝',
+    keyword:'愛嬌たっぷりの人たらし',
+    desc:'場の空気を読む天才。明るく愛嬌があり、誰とでも仲良くなれる社交上手。',
+    tags:['社交的','空気を読む','愛嬌がある','臨機応変'] },
+  { key:'lion',    name:'ライオン',   emoji:'🦁',
+    keyword:'王者の風格',
+    desc:'自信に満ちた王者オーラを放つリーダー。目標に向かって力強く突き進む。',
+    tags:['リーダー気質','自信家','行動力がある','頼りがいがある'] },
+  { key:'koala',   name:'コアラ',     emoji:'🐨',
+    keyword:'マイペースの癒し系',
+    desc:'おっとりマイペースで周囲を和ませる癒し系。自分のペースを大切にする。',
+    tags:['マイペース','癒し系','平和主義','こだわりがある'] },
+  { key:'cheetah', name:'チーター',   emoji:'🐆',
+    keyword:'瞬発力のスピード狂',
+    desc:'誰よりも早く動く行動派。瞬発力と決断力が武器。飽きるのも早いがチャンスを逃さない。',
+    tags:['行動力抜群','スピード重視','チャレンジ精神','飽き性'] },
+  { key:'elephant',name:'ゾウ',       emoji:'🐘',
+    keyword:'慎重で記憶力抜群',
+    desc:'一度覚えたことは忘れない抜群の記憶力の持ち主。慎重に物事を進める堅実家。',
+    tags:['記憶力抜群','慎重派','几帳面','義理堅い'] },
+  { key:'sheep',   name:'ヒツジ',     emoji:'🐑',
+    keyword:'温かい協調性の持ち主',
+    desc:'穏やかで思いやりがあり、チームのまとめ役。争いを好まない平和主義者。',
+    tags:['協調性がある','思いやりがある','平和主義','気遣い上手'] },
+  { key:'monkey',  name:'サル',       emoji:'🐒',
+    keyword:'好奇心旺盛なマルチタレント',
+    desc:'好奇心旺盛で飽くなき探究心の持ち主。器用で何でもこなすマルチな才能の持ち主。',
+    tags:['好奇心旺盛','器用','機転が利く','フットワーク軽い'] },
+  { key:'pegasus', name:'ペガサス',   emoji:'🦄',
+    keyword:'夢を追い続けるロマンチスト',
+    desc:'高い理想と夢を持ち、それに向かって情熱的に歩み続けるロマンチスト。',
+    tags:['理想主義','情熱的','直感力が高い','独自の価値観'] },
+  { key:'deer',    name:'シカ',       emoji:'🦌',
+    keyword:'繊細な感性のアーティスト',
+    desc:'繊細な感性と豊かな感受性を持つ芸術家気質。美しいものや深い意味を大切にする。',
+    tags:['感性豊か','繊細','芸術的','共感力が高い'] },
+  { key:'leopard', name:'クロヒョウ', emoji:'🐈‍⬛',
+    keyword:'謎めいた完璧主義者',
+    desc:'神秘的なオーラを放つ完璧主義者。高い美意識と徹底した自己管理で目標を達成する。',
+    tags:['完璧主義','神秘的','美意識が高い','自己管理が得意'] },
+  { key:'bear',    name:'クマ',       emoji:'🐻',
+    keyword:'頼りになる親分肌',
+    desc:'面倒見がよく頼りがいのある親分肌。一度決めたことは最後まで貫く強い意志を持つ。',
+    tags:['頼りがいがある','義理人情','粘り強い','��倒見がよい'] },
+];
+
+// ══════════════════════════════════════════════
+// サッカーポジション診断
+// ══════════════════════════════════════════════
+
+const POSITIONS = {
+  GK: { name:'ゴールキーパー', emoji:'🧤',
+    keyword:'最後の砦を守る冷静な守護神',
+    desc:'孤独な持ち場でも動じない集中力と判断力を持つタイプ。チーム全体を見渡し、ピンチの瞬間に頼れる存在。',
+    tags:['冷静沈着','高い集中力','責任感が強い','判断力に優れる'] },
+  DF: { name:'ディフェンダー', emoji:'🛡️',
+    keyword:'堅実にチームを支える守りの要',
+    desc:'着実で粘り強く、失点を防ぐために体を張れるタイプ。地味に見えて実はチームの土台を作る縁の下の力持ち。',
+    tags:['堅実','粘り強い','協調性がある','安定感がある'] },
+  MF: { name:'ミッドフィルダー', emoji:'🎯',
+    keyword:'攻守をつなぐ司令塔',
+    desc:'視野が広く、状況に応じて攻めにも守りにも顔を出せるバランス型。チームの流れを作るキーパーソン。',
+    tags:['視野が広い','バランス感覚','臨機応変','コミュニケーション上手'] },
+  FW: { name:'フォワード', emoji:'🔥',
+    keyword:'ゴールに向かって突き進むエースタイプ',
+    desc:'目立つ場所で結果を出すことに喜びを感じる、勝負強いタイプ。チャンスを逃さない決定力が武器。',
+    tags:['勝負強い','行動力がある','決定力がある','目立ちたがり屋'] },
+};
+
+// 動物タイプ別のポジション適性スコア（GK, DF, MF, FW）
+const ANIMAL_POS = {
+  wolf:     { GK:2, DF:1, MF:0, FW:1 },
+  tanuki:   { GK:0, DF:1, MF:2, FW:1 },
+  lion:     { GK:0, DF:0, MF:1, FW:2 },
+  koala:    { GK:1, DF:2, MF:0, FW:0 },
+  cheetah:  { GK:0, DF:0, MF:0, FW:3 },
+  elephant: { GK:1, DF:3, MF:0, FW:0 },
+  sheep:    { GK:0, DF:1, MF:2, FW:0 },
+  monkey:   { GK:0, DF:0, MF:3, FW:0 },
+  pegasus:  { GK:0, DF:0, MF:1, FW:2 },
+  deer:     { GK:1, DF:0, MF:2, FW:0 },
+  leopard:  { GK:3, DF:0, MF:0, FW:0 },
+  bear:     { GK:0, DF:2, MF:1, FW:0 },
+};
+
+// MBTIの各軸別のポジション適性スコア
+const MBTI_AXIS_POS = {
+  E:{ GK:0, DF:0, MF:1, FW:2 },  I:{ GK:2, DF:1, MF:0, FW:0 },
+  S:{ GK:1, DF:2, MF:0, FW:0 },  N:{ GK:0, DF:0, MF:2, FW:1 },
+  T:{ GK:1, DF:2, MF:0, FW:0 },  F:{ GK:0, DF:0, MF:2, FW:1 },
+  J:{ GK:1, DF:2, MF:0, FW:0 },  P:{ GK:0, DF:0, MF:1, FW:2 },
+};
+
+function getPosition(animalKey, mt) {
+  const score = { GK:0, DF:0, MF:0, FW:0 };
+  const a = ANIMAL_POS[animalKey] || {};
+  for (const k in score) score[k] += (a[k] || 0);
+  mt.split('').forEach(letter => {
+    const axis = MBTI_AXIS_POS[letter];
+    if (!axis) return;
+    for (const k in score) score[k] += axis[k];
+  });
+  // 最高得点のポジションを採用（同点はGK→DF→MF→FWの優先順）
+  const order = ['GK','DF','MF','FW'];
+  let best = order[0];
+  order.forEach(k => { if (score[k] > score[best]) best = k; });
+  return best;
+}
+
+const MBTI = {
+  INTJ:{ name:'建築家',         kw:'緻密な戦略家',          desc:'知識と論理で世界を設計するビジョナリー。独立的で革新的。' },
+  INTP:{ name:'論理学者',       kw:'哲学的な分析家',        desc:'真理を探求する知的好奇心の塊。型破りな思考で新発見を生む。' },
+  ENTJ:{ name:'指揮官',         kw:'天性のリーダー',        desc:'生まれながらのリーダーで、高い目標に向かって人を率いる。' },
+  ENTP:{ name:'討論者',         kw:'発想力無限の議論好き',  desc:'アイデアが泉のように湧く革新家。知的議論で本領を発揮。' },
+  INFJ:{ name:'提唱者',         kw:'深い共感の理想主義者',  desc:'深い洞察力と強い共感力を持つ。世界をよりよくしたいと願う。' },
+  INFP:{ name:'仲介者',         kw:'内なる世界を持つ詩人',  desc:'豊かな内面世界と高い感受性を持つ。自分の価値観に忠実。' },
+  ENFJ:{ name:'主人公',         kw:'人を動かすカリスマ',    desc:'他者の成長を助けることに喜びを感じるカリスマ的な存在。' },
+  ENFP:{ name:'運動家',         kw:'自由奔放な情熱家',      desc:'エネルギッシュで創造的。可能性を信じて行動し続ける。' },
+  ISTJ:{ name:'管理者',         kw:'堅実な完遂者',          desc:'責任感が強く信頼できる。ルールと秩序を大切にする誠実な人。' },
+  ISFJ:{ name:'擁護者',         kw:'縁の下の力持ち',        desc:'思いやりと献身性で周囲を支える、静かなる守護者。' },
+  ESTJ:{ name:'幹部',           kw:'組織を動かす実務家',    desc:'秩序と効率を重んじ、確実に目標を��成する実行力の持ち主。' },
+  ESFJ:{ name:'領事',           kw:'みんなの太陽',          desc:'人の気持ちに敏感で、周囲の調和を大切にする社交派。' },
+  ISTP:{ name:'巨匠',           kw:'クールな職人',          desc:'論理的で実践的。静かに観察し、必要な時に力を発揮する。' },
+  ISFP:{ name:'冒険家',         kw:'感性豊かな自由人',      desc:'感受性豊かで柔軟。自分らしさを大切にしながら今を生きる。' },
+  ESTP:{ name:'起業家',         kw:'今を生きる行動派',      desc:'行動が思考より先に来るエネルギッシュな冒険家。' },
+  ESFP:{ name:'エンターテイナー',kw:'場を盛り上げる最高の司会者',desc:'どこにいても周囲を明るくする天性のエンタメ王。' },
+};
+
+// 動物×MBTIの一言フレーズ（192通り）
+// MBTIタイプ別カラー＆バッジ
+const MBTI_META = {
+  INTJ:{color:['#5C4A8C','#3B2E6E'], badge:'🔬', deco:'⭐'},
+  INTP:{color:['#3D6B8C','#1E4A6E'], badge:'💡', deco:'💫'},
+  ENTJ:{color:['#8C2A2A','#6E1A1A'], badge:'👑', deco:'🔥'},
+  ENTP:{color:['#8C6020','#7A4A10'], badge:'⚡', deco:'✨'},
+  INFJ:{color:['#2A7A5C','#1A5C44'], badge:'🌸', deco:'🌟'},
+  INFP:{color:['#3D7A3D','#2A6028'], badge:'🌙', deco:'🌿'},
+  ENFJ:{color:['#8C4A20','#7A3010'], badge:'✨', deco:'🌟'},
+  ENFP:{color:['#8C7010','#7A5C00'], badge:'🌈', deco:'⭐'},
+  ISTJ:{color:['#2A4A8C','#1A3070'], badge:'📋', deco:'💎'},
+  ISFJ:{color:['#206870','#0E5258'], badge:'🛡️', deco:'🌸'},
+  ESTJ:{color:['#5C1A3A','#4A0A28'], badge:'💼', deco:'⭐'},
+  ESFJ:{color:['#8C205C','#7A1048'], badge:'🤝', deco:'💖'},
+  ISTP:{color:['#3A5C3A','#284428'], badge:'🔧', deco:'⚙️'},
+  ISFP:{color:['#1A6A3A','#0A5428'], badge:'🎨', deco:'🌿'},
+  ESTP:{color:['#8C4A00','#7A3800'], badge:'🎯', deco:'🔥'},
+  ESFP:{color:['#7A1A7A','#680868'], badge:'🎪', deco:'🎵'},
+};
+
+// 画像フォールバック: animal_MBTI.png → animal_MBTI.svg → animal.png → 絵文字
+window._imgFallback = function(img, akey, mt, emoji) {
+  const src = img.src;
+  if (src.endsWith(akey+'_'+mt+'.png')) {
+    img.src = akey+'_'+mt+'.svg';
+  } else if (src.endsWith(akey+'_'+mt+'.svg')) {
+    img.src = akey+'.png';
+  } else {
+    img.style.display = 'none';
+    img.nextElementSibling.style.display = 'block';
+  }
+};
+
+function makeSticker(animal, mt) {
+  const meta = MBTI_META[mt];
+  const [c1, c2] = meta.color;
+  const decos = [
+    {top:'-10px',left:'10px',delay:'0s'},
+    {top:'5px',right:'-10px',delay:'.6s'},
+    {bottom:'10px',left:'-8px',delay:'1.1s'},
+  ];
+  const decoHtml = decos.map(p => {
+    const style = Object.entries(p).filter(([k])=>k!=='delay')
+      .map(([k,v])=>`${k}:${v}`).join(';');
+    return `<div class="sticker-deco" style="${style};animation-delay:${p.delay}">${meta.deco}</div>`;
+  }).join('');
+
+  return `
+    <div class="sticker-wrap">
+      ${decoHtml}
+      <div class="sticker-bg" style="background:linear-gradient(145deg,${c1},${c2})">
+        <img class="sticker-img"
+          src="${animal.key}_${mt}.png"
+          onerror="_imgFallback(this,'${animal.key}','${mt}','${animal.emoji}')"
+          alt="${animal.name}">
+        <div class="sticker-animal" style="display:none">${animal.emoji}</div>
+      </div>
+      <div class="sticker-badge">${meta.badge}</div>
+    </div>`;
+}
+
+const PHRASES = {
+  wolf:{
+    INTJ:'ひとりで世界を変えようとする孤高の天才',
+    INTP:'誰も踏み込めない思考の迷宮を彷徨う哲人',
+    ENTJ:'圧倒的カリスマで人を動かす孤高のリーダー',
+    ENTP:'ひとりで世界と戦う知の挑戦者',
+    INFJ:'深い孤独の中で世界の真理を見つめ続ける人',
+    INFP:'自分の世界を守りながら静かに理想を燃やす人',
+    ENFJ:'孤高だけど人の心を動かさずにはいられない人',
+    ENFP:'単独行動が好きなのに周りがついてくるカリスマ',
+    ISTJ:'信念に従い、孤独でも揺るぎない一匹狼',
+    ISFJ:'誰にも言わないけど実は誰より心配している人',
+    ESTJ:'マイルールで組織を動かす���引なリーダー',
+    ESFJ:'孤高を装っているのに実は人が大好きな矛盾な人',
+    ISTP:'必要な時だけ動くクールな一匹狼',
+    ISFP:'自分の感性に従い誰にも縛られない自由人',
+    ESTP:'とりあえず動いてから考えるアウトロー',
+    ESFP:'孤高キャラなのに場を盛り上げてしまう不思議な人',
+  },
+  tanuki:{
+    INTJ:'愛嬌で人を近づけて、内心では完璧な戦略を立てている人',
+    INTP:'笑顔の裏でひたすら深く考えている謎の人',
+    ENTJ:'かわいい顔して実は仕切りたがりのボス',
+    ENTP:'冗談を言いながらアイデアを試し続ける実験好き',
+    INFJ:'場を和ませながら誰よりも深く人を見ている人',
+    INFP:'ほんわか見えて実は内に熱い夢を秘めている人',
+    ENFJ:'愛嬌で人を引き寄せ自然とリーダー���なってしまう人',
+    ENFP:'とにかく楽しいことが大好きなムードメーカー',
+    ISTJ:'明るい性格だけど根はきっちりした堅実派',
+    ISFJ:'愛嬌たっぷりで気遣い上手な縁の下の力持ち',
+    ESTJ:'誰とでも仲良くなれる実行力のある取りまとめ役',
+    ESFJ:'みんなが笑顔になるだけで満足できる太陽のような人',
+    ISTP:'明るいけど実は深く考えてから動くクールな人',
+    ISFP:'愛嬌と感性で世界を彩る自由な芸術家',
+    ESTP:'ノリと勢いで突破するチャンスメーカー',
+    ESFP:'場を盛り上げるのが天職の生まれながらのスター',
+  },
+  lion:{
+    INTJ:'圧倒的ビジョンと実行力で世界を変���るリーダー',
+    INTP:'知性と威厳で部下を唸らせる異色のリーダー',
+    ENTJ:'生まれながらの王者、周囲を引っ張る最強リーダー',
+    ENTP:'型破りなアイデアで組織を引っ張る革命的リーダー',
+    INFJ:'静かなオーラで人を導く深みのある王者',
+    INFP:'優しく見えて実は誰より情熱的な夢の体現者',
+    ENFJ:'人の心を掴んで離さない天性のカリスマリーダー',
+    ENFP:'情熱と行動力でみんなを巻き込む太陽のような存在',
+    ISTJ:'責任感と誠実さで信頼を勝ち取るリーダー',
+    ISFJ:'自分より仲間のために全力を尽くすチームの支柱',
+    ESTJ:'ルールと実力で組織を率いる頼れる指揮官',
+    ESFJ:'みんなに愛されながら自然とトップに立つ人気者',
+    ISTP:'余計な言葉は要らない、実力で黙らせるクールな王者',
+    ISFP:'自分らしさを貫く誰にも縛られないライオン',
+    ESTP:'チャンスを見逃さず瞬時に動く行動力のある王者',
+    ESFP:'場を支配しながら全員を笑顔にする最強エンタメ王',
+  },
+  koala:{
+    INTJ:'のんびり見えて実は緻密な計算をしているズル賢い天才',
+    INTP:'マイペースに見えてその実ひたすら深く考えている人',
+    ENTJ:'マイペースだけど気づいたらなぜかトップに立っている人',
+    ENTP:'ゆっくり動いているのにアイデアは誰より速い人',
+    INFJ:'穏やかな佇まいの中に深い洞察を秘めた静かな賢者',
+    INFP:'自分の世界でゆっくり夢を育てる内なる芸術家',
+    ENFJ:'のんびりしているのになぜか人がついてくる不思議なリーダー',
+    ENFP:'マイペースで自由、それでいて周りを温かく包む存在',
+    ISTJ:'自分のペースを崩さず着実に積み上げる堅実な人',
+    ISFJ:'おっとりしているのに誰より周りのことを考えている人',
+    ESTJ:'ゆっくり見えてその実確実に結果を出すプロ',
+    ESFJ:'癒し系なのに気づいたらみんなの中心にいる人',
+    ISTP:'のんびりしているようで実は誰より合理的に動いている人',
+    ISFP:'自分のペースで感性を磨く独自の美の探求者',
+    ESTP:'行動はゆっくりだけどチャンスだと思ったら一瞬で動く人',
+    ESFP:'マイペースなのに周りをほっこりさせる癒しのスター',
+  },
+  cheetah:{
+    INTJ:'誰より速く動いて誰より深く考える最強の異端児',
+    INTP:'考えるより速く動いてあとで理論を構築する天才',
+    ENTJ:'思ったら即行動、圧倒的スピードで頂点に立つリーダー',
+    ENTP:'飽きたら即方向転換、スピードとアイデアで前進し続ける人',
+    INFJ:'直感で動いて後から理由を見つける行動する理想主義者',
+    INFP:'夢を語るより行動してしまう、実は熱い情熱家',
+    ENFJ:'スピード感を持って人を引っ張るエネルギッシュなリーダー',
+    ENFP:'飽き性だけど行動大好き、常に新しい何かを探している人',
+    ISTJ:'早いけど確実、スピードと丁寧さを両立する完遂者',
+    ISFJ:'素早く動いてさりげなく人��助ける縁の下のヒーロー',
+    ESTJ:'誰より早く誰より確実に仕事を片付ける行動力の塊',
+    ESFJ:'テキパキ動いて場をまとめる頼れる存在感',
+    ISTP:'必要な時だけ全速力で動くクールな行動派',
+    ISFP:'直感で動いて新しい景色を見に行く自由な冒険家',
+    ESTP:'止まっている時間がもったいない生粋の行動主義者',
+    ESFP:'ノリとスピードで場を一瞬で変えるエネルギーの塊',
+  },
+  elephant:{
+    INTJ:'膨大な知識と記憶力で長期戦略を描く知の巨人',
+    INTP:'一度仕入れた情報は絶対忘れない知の蓄積者',
+    ENTJ:'過去のデータと未来のビジョンで組織を動かすリーダー',
+    ENTP:'豊富な知識をもとに次々と新しいアイデアを生む発明家',
+    INFJ:'深い記憶と洞察力で人の心を静かに導く存在',
+    INFP:'大切な記憶を心の宝物にしながら夢を育てる人',
+    ENFJ:'過去の経験を活かして人を成長させるメンター',
+    ENFP:'豊富な経験と好奇心で世界を広げ続ける探検家',
+    ISTJ:'几帳面で記憶力抜群、完璧な記録者',
+    ISFJ:'誕生日も大切な話も絶対覚えている縁の下の守護者',
+    ESTJ:'確かな実績と記憶力で組織を支える柱',
+    ESFJ:'みんなの大切なことを覚えていて気にかけてあげる存在',
+    ISTP:'必要な情報を全て把握して最適な解を出す実務家',
+    ISFP:'豊かな感受性と記憶で世界の美しさを切り取る人',
+    ESTP:'経験値を武器にチャンスを確実につかむ行動家',
+    ESFP:'楽しかった思い出を大切にしながら今を全力で生きる人',
+  },
+  sheep:{
+    INTJ:'穏やかな外見の裏に誰も気づかない緻密な計画を持つ人',
+    INTP:'争いを避けながらひっそりと深い思考を楽しむ人',
+    ENTJ:'柔らかい物腰でみんなをまとめる意外と仕切り上手',
+    ENTP:'波風立てずにアイデアを実現する巧みな平和主義者',
+    INFJ:'誰よりも平和を願い誰よりも深く人を理解する人',
+    INFP:'穏やかな心の中に豊かな内なる世界を持つ詩人',
+    ENFJ:'調和を大切にしながら人を成長させる温かいリーダー',
+    ENFP:'争いは嫌いだけど夢への情熱は誰にも負けない人',
+    ISTJ:'争わずに着実に信頼を積み重ねる誠実な人',
+    ISFJ:'縁の下で静かにみんなを支える優しさの象徴',
+    ESTJ:'和を保ちながら確実に仕事を進��る調和型リーダー',
+    ESFJ:'みんなが仲良くいられるように心を砕く愛情深い人',
+    ISTP:'穏やかに見えて実は合理的、争いより効率を選ぶ人',
+    ISFP:'周りに溶け込みながら自分らしい感性を磨く人',
+    ESTP:'平和的に見えてチャンスにはしっかり飛びつく人',
+    ESFP:'みんなが笑顔でいられるだけで最高に幸せな人',
+  },
+  monkey:{
+    INTJ:'好奇心と論理力で次々と新しい分野を極める天才',
+    INTP:'探求心が止まらない知識の迷路を楽しむ人',
+    ENTJ:'多才さとリーダーシップで何でもこなすオールラウンダー',
+    ENTP:'アイデアが次々浮かんで実験せずにはいられない発明家',
+    INFJ:'多彩な才能を持ちながら深く人を見つめる観察者',
+    INFP:'様々なことに興味を持ちながら自分の感性を磨く人',
+    ENFJ:'多才で人を惹きつける周りを成長させる存在',
+    ENFP:'新しいことへの好奇心が止まらない永遠の冒険家',
+    ISTJ:'なんでもできるのに地道にこつこつ積み上げる人',
+    ISFJ:'器用さを活かして周りを助けることに喜びを感じる人',
+    ESTJ:'多才さと実行力で次々と課題を解決するプロ',
+    ESFJ:'明るく器用で気づいたらみんなの人気者になっている人',
+    ISTP:'多才だけどクール、必要な時にだけ実力を見せる人',
+    ISFP:'豊かな感性と器用さで自分だけの世界を作る芸術家',
+    ESTP:'好奇心と行動力で次々とチャンスをつかむ実行者',
+    ESFP:'才能と明るさで場をパッと華やかにするスター',
+  },
+  pegasus:{
+    INTJ:'壮大なビジョンを誰より深く論理的に追いかける夢想家',
+    INTP:'理想の世界を頭の中で精密に構築し続ける哲学者',
+    ENTJ:'高い理想を現実に変えるカリスマ的ビジョナリー',
+    ENTP:'常識を超えたアイデアで世界を変えようとする革命家',
+    INFJ:'深い洞察と高い理想で世界をよりよ���しようとする人',
+    INFP:'純粋な夢と豊かな感性で独自の世���を紡ぎ出す詩人',
+    ENFJ:'夢を語るだけで人を動かすインスピレーションの源',
+    ENFP:'夢と情熱と行動力で可能性の限界に挑み続ける人',
+    ISTJ:'夢は大きく、でも着実に一歩ずつ積み上げていく人',
+    ISFJ:'静かに夢を育てながら周りを優しく支える人',
+    ESTJ:'理想を現実に落とし込んで確実に実現させるプロ',
+    ESFJ:'夢を語ることで周りを元気にする希望の灯台',
+    ISTP:'夢はでかいけど行動はシンプルな合理的な夢追い人',
+    ISFP:'感性の赴くままに夢の世界を飛び回る自由な魂',
+    ESTP:'夢を語るより先に動いてし���う行動力の塊',
+    ESFP:'夢と笑顔と情熱で周りを照らす太陽のような存在',
+  },
+  deer:{
+    INTJ:'繊細な感性と鋭い知性を組み合わせた稀有な存在',
+    INTP:'深い思索と豊かな感受性で世界の本質を探る人',
+    ENTJ:'繊細だけどいざとなれば誰より強いリーダー',
+    ENTP:'感性とアイデアが融合した独創的な革新家',
+    INFJ:'深い共感力と繊細な感性で人の心に寄り添う人',
+    INFP:'誰より豊かな内面世界を持つ感性の芸術家',
+    ENFJ:'繊細な気配りと情熱で人を導く感動的なリーダー',
+    ENFP:'感性豊かで自由、周りを感動させる生まれながらの詩人',
+    ISTJ:'繊細だけど芯が強い静かに信頼を積み上げる人',
+    ISFJ:'繊細な気遣いで誰よりも周りを大切にする守護者',
+    ESTJ:'美意識と実行力を兼ね備えた上品なプロフェッショナル',
+    ESFJ:'繊細な心で周りを包むみんなの心の拠り所',
+    ISTP:'感性と合理性を兼ね備えた静かなる職人',
+    ISFP:'感性の赴くままに生きる美しい自由人',
+    ESTP:'繊細に見えて行動は大胆、直感で動く芸術的冒険家',
+    ESFP:'繊細な感性で世界を彩る愛されるエンターテイナー',
+  },
+  leopard:{
+    INTJ:'完璧なビジョンを完璧な戦略で実現する究極の戦略家',
+    INTP:'誰も到達できない深さで物事を分析する孤高の思想家',
+    ENTJ:'完璧主義とカリスマが融合した圧倒的なリーダー',
+    ENTP:'神秘的なオーラで人を惹きつける異才の革命家',
+    INFJ:'深��洞察と神秘的な直感で未来を見通す人',
+    INFP:'誰にも理解されない���い世界を静かに守り続ける人',
+    ENFJ:'神秘的なオーラで人を惹きつけ心を動かすカリスマ',
+    ENFP:'謎めいているのになぜか周りを魅了してしまう人',
+    ISTJ:'完璧主義と誠実さで絶対に裏切らない信頼の人',
+    ISFJ:'完璧な気遣いで周りを守る静かなる守護神',
+    ESTJ:'高い基準と実行力で組織を完璧に動かすプロ',
+    ESFJ:'完璧なホスピタリティで周りを魅了する存在',
+    ISTP:'無駄を一切省いた洗練されたクールな職人',
+    ISFP:'独自の美意識で唯一無二の世界を作り上げる人',
+    ESTP:'神秘的に見えて実は誰より行動力のある実践家',
+    ESFP:'謎めいた魅力で場を独占する圧倒的なスター',
+  },
+  bear:{
+    INTJ:'強い意志と深い知性で長期目標を着実に実現する人',
+    INTP:'面倒見がいいのに実は深く思考する哲学的な存在',
+    ENTJ:'強引さと面倒見のよさで組織を動かす大物リーダー',
+    ENTP:'面倒見がよくて発想も豊か、頼れる参謀タイプ',
+    INFJ:'深い思いやりと強い意志で人を支える静かな柱',
+    INFP:'厳しい外見に反して内には豊かな感性と夢がある人',
+    ENFJ:'頼りがいと情熱を持って人を育てる最高のメンター',
+    ENFP:'豪快で愛情深いみんなを包み込む大きな存在',
+    ISTJ:'一度決めたら絶対やり遂げる鋼の意志の持ち主',
+    ISFJ:'黙って支え続ける最強の縁の下の力持ち',
+    ESTJ:'義理と実力で組織を束ねる頼れる大黒柱',
+    ESFJ:'愛情深くて頼りがいのあるみんなの親分',
+    ISTP:'無口だけど実力派、必要���時に確実に動く職人',
+    ISFP:'大きな体に繊細な心を持つ優しいアーティスト',
+    ESTP:'豪快に行動して確実にチャンスをつかむ勝負師',
+    ESFP:'豪快で明るい、いるだけで場が盛り上���るムードメーカー',
+  },
+};
+
+// ══════════════════════════════════════════════
+// 質問（20問）
+// ══════════════════════════════════════════════
+
+const QS = [
+  // E/I (5問)
+  {d:'EI', text:'週末の過ごし方として、より自分に近いのは？',
+   c:['友達と集まったり外出して過ごしたい','ひとりでゆっくり家で過ごしたい']},
+  {d:'EI', text:'初対面の人が多いパーティーに参加したら？',
+   c:['積極的に話しかけて友達を作る','まず観察して話しやすそうな人を見つける']},
+  {d:'EI', text:'エネルギーが補充される場面は？',
+   c:['人と話したり活動しているとき','静かにひとりでいるとき']},
+  {d:'EI', text:'考えごとをするとき、どちらに近い？',
+   c:['声に出したり誰かに話しながら考える','頭の中で静かに考えを整理する']},
+  {d:'EI', text:'仕事や作業をするとき、好きなのは？',
+   c:['チームで協力しながら進める','ひとりで集中して取り組む']},
+  // N/S (5問)
+  {d:'NS', text:'新しいプロジェクトが始まったとき、まず考えるのは？',
+   c:['全体のビジョンや将来の可能性','具体的な手順や必要なリソース']},
+  {d:'NS', text:'情報の受け取り方として、自分に近いのは？',
+   c:['行間を読んで意味やパターンを見つけようとする','書いてある事実や具体的な内容を正確に把握する']},
+  {d:'NS', text:'問題を解決するとき、好きなアプローチは？',
+   c:['新しいやり方やアイデアを考える','実績のある方法を着実に実行する']},
+  {d:'NS', text:'会話や本で惹かれるのは？',
+   c:['抽象的な概念や哲学的な話','具体的な体験談や実践的な話']},
+  {d:'NS', text:'未来について考えるとき、どちらに近い？',
+   c:['どんな可能性があるか夢を広げて考える','現実的に何ができるか具体的に考える']},
+  // T/F (5問)
+  {d:'TF', text:'誰かの意見に同意できないとき？',
+   c:['論理的に根拠を示して反論する','相手の気持ちを考えながら伝え方を工夫する']},
+  {d:'TF', text:'大事な決断をするとき、重視するのは？',
+   c:['客観的なデータや論理的な分析','自分や周りの人の感情・価値観']},
+  {d:'TF', text:'友人から悩みを打ち明けられたら？',
+   c:['原因を分析して解決策を一緒に考える','まず気持ちに共感して寄り添って話を聞く']},
+  {d:'TF', text:'フィードバックをするとき、大切にするのは？',
+   c:['正確さと有用性（たとえ厳しくても）','相手の気持ちへの配慮']},
+  {d:'TF', text:'職場や学校でのあなたは？',
+   c:['成果や効率を重視する実務派','チームの雰囲気や人間関係を重視する']},
+  // J/P (5問)
+  {d:'JP', text:'旅行の計画を立てるとき？',
+   c:['スケジュールや行き先を細かく決める','ざっくりした方向性だけ決めて行き当たりばったりを楽しむ']},
+  {d:'JP', text:'締め切りに対する自分の姿勢は？',
+   c:['余裕をもって前倒しで終わらせる','ギリギリになって集中力を発揮することが多い']},
+  {d:'JP', text:'身の回りの整理整頓は？',
+   c:['ものの場所が決まっていて整然としている','必要なものがどこにあるか把握していれば問題ない']},
+  {d:'JP', text:'新しいことを始めるとき？',
+   c:['全体の計画を立ててから着手する','まずやってみてから調整していく']},
+  {d:'JP', text:'複数のことが同時に進んでいる状況は？',
+   c:['優先順位をつけて順番に片付けたい','並行して進めることで逆に集中できる']},
+];
+
+// ══════════════════════════════════════════════
+// ロジック
+// ══════════════════════════════════════════════
+
+function getAnimal(y, m, d) {
+  let n = String(y).split('').reduce((a,b)=>a+parseInt(b),0) + m + d;
+  while (n > 60) n = String(n).split('').reduce((a,b)=>a+parseInt(b),0);
+  if (n === 0) n = 12;
+  return ANIMALS[(n - 1) % 12];
+}
+
+function getMBTI(ans) {
+  let E=0,I=0,N=0,S=0,T=0,F=0,J=0,P=0;
+  QS.forEach((q,i) => {
+    const a = ans[i];
+    if (q.d==='EI') a===0?E++:I++;
+    else if (q.d==='NS') a===0?N++:S++;
+    else if (q.d==='TF') a===0?T++:F++;
+    else if (q.d==='JP') a===0?J++:P++;
+  });
+  return `${E>=I?'E':'I'}${N>=S?'N':'S'}${T>=F?'T':'F'}${J>=P?'J':'P'}`;
+}
+
+// ══════════════════════════════════════════════
+// UI ヘルパー
+// ══════════════════════════════════════════════
+
+const chat = document.getElementById('chat');
+const inp  = document.getElementById('input-area');
+
+function scroll() { chat.scrollTop = chat.scrollHeight; }
+
+function addRow(html, who) {
+  const row = document.createElement('div');
+  row.className = `row ${who}`;
+  if (who === 'bot') {
+    row.innerHTML = `<div class="avatar">🌿</div><div class="bubble bot">${html}</div>`;
+  } else {
+    row.innerHTML = `<div class="bubble user">${html}</div>`;
+  }
+  chat.appendChild(row);
+  scroll();
+}
+
+let typingEl = null;
+function showTyping() {
+  typingEl = document.createElement('div');
+  typingEl.className = 'row bot';
+  typingEl.innerHTML = '<div class="avatar">🌿</div><div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>';
+  chat.appendChild(typingEl);
+  scroll();
+}
+function hideTyping() { if (typingEl) { typingEl.remove(); typingEl = null; } }
+
+async function botSay(html, ms=700) {
+  showTyping();
+  await wait(ms);
+  hideTyping();
+  addRow(html, 'bot');
+}
+
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function clearInput() { inp.innerHTML = ''; }
+
+// ══════════════════════════════════════════════
+// フェーズ
+// ══════════════════════════════════════════════
+
+let state = {};
+
+async function phaseStart() {
+  await botSay('こんにちは！⚽<br>あなたに向いてるサッカーポジション診断へようこそ！', 400);
+  await botSay('生年月日と20の質問に答えるだけで<br>動物タイプ×性格タイプからGK/DF/MF/FWのどれが向いてるかわかります✨', 900);
+  clearInput();
+  const btn = document.createElement('button');
+  btn.className = 'btn'; btn.textContent = '診断をスタート 🐾';
+  btn.onclick = () => { addRow('診断をスタート 🐾','user'); phaseBirth(); };
+  inp.appendChild(btn);
+}
+
+async function phaseBirth() {
+  clearInput();
+  await botSay('まず、生年月日を教えてください📅', 500);
+  clearInput();
+  const row = document.createElement('div');
+  row.className = 'date-row';
+  const di = document.createElement('input');
+  di.type = 'date';
+  di.max = new Date().toISOString().slice(0,10);
+  di.min = '1900-01-01';
+  const btn = document.createElement('button');
+  btn.className = 'btn'; btn.textContent = '決定';
+  btn.style.width = 'auto';
+  btn.onclick = () => {
+    if (!di.value) { di.style.borderColor='#f55'; return; }
+    const [y,m,d] = di.value.split('-').map(Number);
+    state.animal = getAnimal(y,m,d);
+    addRow(`🎂 ${y}年${m}月${d}日生まれ`, 'user');
+    phaseQ();
+  };
+  row.append(di, btn);
+  inp.appendChild(row);
+}
+
+async function phaseQ() {
+  state.answers = [];
+  clearInput();
+  await botSay('ありがとうございます！<br>続いて20の質問に答えてください🌟', 600);
+  await botSay('より自分に近い方を選んでね。<br>直感で選ぶのがおすすめです！', 900);
+  showQ(0);
+}
+
+async function showQ(idx) {
+  clearInput();
+  if (idx >= QS.length) { state.mbti = getMBTI(state.answers); phaseResult(); return; }
+  const q = QS[idx];
+  const total = QS.length;
+  const pct = Math.round(idx / total * 100);
+  clearInput();
+
+  // Progress
+  const pg = document.createElement('div');
+  pg.innerHTML = `
+    <div class="progress-header"><span>質問 ${idx+1} / ${total}</span><span>${pct}%</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="q-label">Q${idx+1}. ${q.text}</div>
+  `;
+
+  const cs = document.createElement('div');
+  cs.className = 'choices';
+  q.c.forEach((txt, ci) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice'; btn.textContent = txt;
+    btn.onclick = async () => {
+      if (btn.disabled) return;
+      document.querySelectorAll('.choice').forEach(b=>{ b.disabled=true; b.style.cursor='default'; });
+      btn.classList.add('picked');
+      state.answers[idx] = ci;
+      addRow(txt, 'user');
+      await wait(300);
+      showQ(idx + 1);
+    };
+    cs.appendChild(btn);
+  });
+
+  pg.appendChild(cs);
+  inp.appendChild(pg);
+  scroll();
+}
+
+async function phaseResult() {
+  clearInput();
+  await botSay('お疲れ様でした！結果を計算中です…🔮', 600);
+  await wait(1200);
+  await botSay('結果が出ました！🎉', 400);
+
+  const a = state.animal;
+  const mt = state.mbti;
+  const m = MBTI[mt];
+  const posKey = getPosition(a.key, mt);
+  const pos = POSITIONS[posKey];
+  const phrase = (PHRASES[a.key] && PHRASES[a.key][mt]) || `${a.keyword}な${a.name} × ${m.kw}`;
+
+  // カード
+  const row = document.createElement('div');
+  row.className = 'row bot';
+  const av = document.createElement('div');
+  av.className = 'avatar'; av.textContent = '⚽';
+
+  const card = document.createElement('div');
+  card.className = 'result-card';
+  card.innerHTML = `
+    ${makeSticker(a, mt)}
+    <div class="big-emoji">${pos.emoji}</div>
+    <div class="animal-name">あなたは${pos.name}タイプ！</div>
+    <div class="mbti-badge">${posKey}</div>
+    <div class="sub" style="margin-top:6px">${a.name}（動物タイプ）× ${mt}（性格タイプ）から診断</div>
+    <div class="phrase-box">💬 ${pos.keyword}</div>
+    <hr class="divider">
+    <div class="section">
+      <h3>${pos.emoji} ${pos.name}タイプの特徴</h3>
+      <p>${pos.desc}</p>
+      <div class="tags">${pos.tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>
+    </div>
+    <hr class="divider">
+    <div class="section">
+      <h3>🐾 ${a.name}タイプの特徴</h3>
+      <p>${a.desc}</p>
+      <div class="tags">${a.tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>
+    </div>
+    <div class="section">
+      <h3>🧠 ${mt}（${m.name}）の特徴</h3>
+      <p>${m.desc}</p>
+    </div>
+    <div class="section">
+      <h3>💬 ひとこと</h3>
+      <p>${phrase}</p>
+    </div>
+  `;
+
+  row.append(av, card);
+  chat.appendChild(row);
+  scroll();
+
+  await wait(600);
+  await botSay(`あなたのポジションは「<b>${pos.emoji} ${pos.name}</b>」です✨<br>（${a.name}×${mt}タイプから診断）<br>どうでしたか？当たってましたか？😊`, 800);
+
+  clearInput();
+  const btnWrap = document.createElement('div');
+  btnWrap.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
+
+  const btn = document.createElement('button');
+  btn.className = 'btn';
+  btn.textContent = '🔄 もう一度診断する';
+  btn.onclick = () => { chat.innerHTML = ''; state = {}; phaseStart(); };
+
+  const btnMatrix = document.createElement('button');
+  btnMatrix.className = 'btn btn-outline';
+  btnMatrix.textContent = '📊 動物×性格タイプの一覧を見る';
+  btnMatrix.onclick = () => window.open('matrix.html', '_blank');
+
+  btnWrap.append(btn, btnMatrix);
+  inp.appendChild(btnWrap);
+}
+
+// 起動
+phaseStart();
+</script>
+</body>
+</html>

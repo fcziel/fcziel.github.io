@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>組み合わせマトリクス｜動物×性格タイプ占い</title>
+<style>
+:root {
+  --green: #06C755;
+  --green-dark: #05A847;
+  --green-light: #E8F9F0;
+  --bg: #EDEDED;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, 'Hiragino Sans', 'Meiryo', 'Yu Gothic', sans-serif;
+  background: var(--bg); min-height: 100vh;
+}
+.header {
+  background: var(--green); color: #fff;
+  padding: 12px 16px; text-align: center;
+  font-size: 15px; font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 10px;
+}
+.header .back {
+  background: rgba(255,255,255,0.25); border: none; color: #fff;
+  border-radius: 20px; padding: 5px 12px; font-size: 13px;
+  cursor: pointer; font-family: inherit; white-space: nowrap;
+}
+.header .back:hover { background: rgba(255,255,255,0.4); }
+.header .title { flex: 1; }
+.header small { font-size: 11px; font-weight: normal; opacity: .85; display: block; }
+
+/* フィルター */
+.filter-bar {
+  background: #fff; padding: 10px 14px;
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  border-bottom: 1px solid #ddd; position: sticky; top: 53px; z-index: 90;
+}
+.filter-bar label { font-size: 12px; color: #666; font-weight: bold; }
+.filter-bar select {
+  padding: 5px 10px; border: 2px solid #ddd; border-radius: 20px;
+  font-size: 13px; font-family: inherit; outline: none;
+  background: #fff; cursor: pointer;
+}
+.filter-bar select:focus { border-color: var(--green); }
+.clear-btn {
+  background: #f0f0f0; border: none; border-radius: 20px;
+  padding: 5px 12px; font-size: 12px; cursor: pointer; color: #666;
+  font-family: inherit;
+}
+.clear-btn:hover { background: #e0e0e0; }
+.count-label { font-size: 12px; color: #888; margin-left: auto; }
+
+/* グリッド */
+.grid-wrap { padding: 12px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+/* カード */
+.card {
+  background: #fff; border-radius: 14px;
+  padding: 12px 10px 10px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  cursor: default;
+  transition: transform .15s, box-shadow .15s;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.13); }
+
+.card-sticker {
+  position: relative; width: 80px; height: 80px;
+  margin: 0 auto 8px;
+}
+.card-bg {
+  width: 80px; height: 80px; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+  position: relative; overflow: hidden;
+}
+.card-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(255,255,255,0.1); border-radius: 18px;
+}
+.card-animal { font-size: 42px; line-height: 1; position: relative; z-index: 1; }
+.card-img {
+  width: 54px; height: 54px; object-fit: contain;
+  position: relative; z-index: 1;
+  filter: drop-shadow(0 0 2px #fff) drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+}
+.card-badge {
+  position: absolute; bottom: -4px; right: -4px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  border: 2px solid #fff;
+}
+.card-title {
+  font-size: 12px; font-weight: bold; color: #222;
+  line-height: 1.4; margin-bottom: 2px;
+}
+.card-mbti {
+  display: inline-block; font-size: 10px; font-weight: bold;
+  background: var(--green-light); color: var(--green-dark);
+  border-radius: 10px; padding: 1px 7px;
+}
+.card-phrase {
+  font-size: 10px; color: #777; margin-top: 5px;
+  line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.no-result {
+  text-align: center; padding: 60px 20px;
+  color: #aaa; font-size: 14px; grid-column: 1/-1;
+}
+
+/* PC */
+@media (min-width: 600px) {
+  .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .grid-wrap { padding: 16px 20px; max-width: 1200px; margin: 0 auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back" href="index.html">← 占いに戻る</a>
+  <div class="title">
+    全組み合わせマトリクス
+    <small>12動物 × 16性格タイプ ＝ 192通り</small>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <label>動物</label>
+  <select id="selAnimal">
+    <option value="">すべて</option>
+  </select>
+  <label>性格タイプ</label>
+  <select id="selMBTI">
+    <option value="">すべて</option>
+  </select>
+  <button class="clear-btn" onclick="clearFilter()">リセット</button>
+  <span class="count-label" id="countLabel"></span>
+</div>
+
+<div class="grid-wrap">
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const ANIMALS = [
+  {key:'wolf',    name:'オオカミ',   emoji:'🐺'},
+  {key:'tanuki',  name:'タヌキ',     emoji:'🦝'},
+  {key:'lion',    name:'ライオン',   emoji:'🦁'},
+  {key:'koala',   name:'コアラ',     emoji:'🐨'},
+  {key:'cheetah', name:'チーター',   emoji:'🐆'},
+  {key:'elephant',name:'ゾウ',       emoji:'🐘'},
+  {key:'sheep',   name:'ヒツジ',     emoji:'🐑'},
+  {key:'monkey',  name:'サル',       emoji:'🐒'},
+  {key:'pegasus', name:'ペガサス',   emoji:'🦄'},
+  {key:'deer',    name:'シカ',       emoji:'🦌'},
+  {key:'leopard', name:'クロヒョウ', emoji:'🐈‍⬛'},
+  {key:'bear',    name:'クマ',       emoji:'🐻'},
+];
+
+const MBTI_LIST = [
+  {id:'INTJ',name:'建築家'},   {id:'INTP',name:'論理学者'},
+  {id:'ENTJ',name:'指揮官'},   {id:'ENTP',name:'討論者'},
+  {id:'INFJ',name:'提唱者'},   {id:'INFP',name:'仲介者'},
+  {id:'ENFJ',name:'主人公'},   {id:'ENFP',name:'運動家'},
+  {id:'ISTJ',name:'管理者'},   {id:'ISFJ',name:'擁護者'},
+  {id:'ESTJ',name:'幹部'},     {id:'ESFJ',name:'領事'},
+  {id:'ISTP',name:'巨匠'},     {id:'ISFP',name:'冒険家'},
+  {id:'ESTP',name:'起業家'},   {id:'ESFP',name:'エンターテイナー'},
+];
+
+const MBTI_META = {
+  INTJ:{color:['#5C4A8C','#3B2E6E'],badge:'🔬'},
+  INTP:{color:['#3D6B8C','#1E4A6E'],badge:'💡'},
+  ENTJ:{color:['#8C2A2A','#6E1A1A'],badge:'👑'},
+  ENTP:{color:['#8C6020','#7A4A10'],badge:'⚡'},
+  INFJ:{color:['#2A7A5C','#1A5C44'],badge:'🌸'},
+  INFP:{color:['#3D7A3D','#2A6028'],badge:'🌙'},
+  ENFJ:{color:['#8C4A20','#7A3010'],badge:'✨'},
+  ENFP:{color:['#8C7010','#7A5C00'],badge:'🌈'},
+  ISTJ:{color:['#2A4A8C','#1A3070'],badge:'📋'},
+  ISFJ:{color:['#206870','#0E5258'],badge:'🛡️'},
+  ESTJ:{color:['#5C1A3A','#4A0A28'],badge:'💼'},
+  ESFJ:{color:['#8C205C','#7A1048'],badge:'🤝'},
+  ISTP:{color:['#3A5C3A','#284428'],badge:'🔧'},
+  ISFP:{color:['#1A6A3A','#0A5428'],badge:'🎨'},
+  ESTP:{color:['#8C4A00','#7A3800'],badge:'🎯'},
+  ESFP:{color:['#7A1A7A','#680868'],badge:'🎪'},
+};
+
+const PHRASES = {
+  wolf:{INTJ:'孤高の天才',INTP:'思考の迷宮人',ENTJ:'孤高のリーダー',ENTP:'知の挑戦者',INFJ:'世界を見つめる孤高の哲人',INFP:'静かに理想を燃やす人',ENFJ:'人を動かさずにいられない孤高者',ENFP:'周りがついてくるカリスマ',ISTJ:'信念を貫く一匹狼',ISFJ:'誰より心配している人',ESTJ:'マイルールで動くリーダー',ESFJ:'孤高装いの人好き',ISTP:'クールな一匹狼',ISFP:'誰にも縛られない自由人',ESTP:'動いてから考えるアウトロー',ESFP:'場を盛り上げる不思議な人'},
+  tanuki:{INTJ:'愛嬌の裏に完璧な戦略',INTP:'笑顔の裏の深い思索家',ENTJ:'かわいい顔の仕切りたがりボス',ENTP:'冗談まじりの実験好き',INFJ:'和ませながら深く人を見る人',INFP:'ほんわか見えて熱い夢を秘める人',ENFJ:'愛嬌で自然とリーダーになる人',ENFP:'楽しいことが大好きなムードメーカー',ISTJ:'明るいけど根は堅実派',ISFJ:'愛嬌と気遣いの縁の下の力持ち',ESTJ:'誰とでも仲良くなれる取りまとめ役',ESFJ:'みんなの笑顔で満足できる太陽',ISTP:'明るいけどクールに考えて動く人',ISFP:'愛嬌と感性の自由な芸術家',ESTP:'ノリと勢いのチャンスメーカー',ESFP:'生まれながらのスター'},
+  lion:{INTJ:'圧倒的ビジョンの最強リーダー',INTP:'知性と威厳の異色リーダー',ENTJ:'生まれながらの王者',ENTP:'型破りな革命的リーダー',INFJ:'静かなオーラの深みある王者',INFP:'実は誰より情熱的な夢の体現者',ENFJ:'天性のカリスマリーダー',ENFP:'みんなを巻き込む太陽のような存在',ISTJ:'誠実さで信頼を勝ち取るリーダー',ISFJ:'仲間のために全力を尽くすチームの支柱',ESTJ:'ルールと実力の頼れる指揮官',ESFJ:'愛されながらトップに立つ人気者',ISTP:'実力で黙らせるクールな王者',ISFP:'誰にも縛られないライオン',ESTP:'瞬時に動く行動力ある王者',ESFP:'全員を笑顔にする最強エンタメ王'},
+  koala:{INTJ:'のんびり見えてズル賢い天才',INTP:'マイペースのひたすら深い思索家',ENTJ:'気づいたらトップに立っているマイペース者',ENTP:'ゆっくり動いてアイデアは最速',INFJ:'穏やかな佇まいの静かな賢者',INFP:'ゆっくり夢を育てる内なる芸術家',ENFJ:'なぜか人がついてくる不思議なリーダー',ENFP:'マイペースで周りを温かく包む存在',ISTJ:'ペースを崩さず着実に積み上げる人',ISFJ:'おっとりなのに誰より周りを考える人',ESTJ:'ゆっくり見えて確実に結果を出すプロ',ESFJ:'癒し系なのにみんなの中心にいる人',ISTP:'のんびりしてるようで実は最合理的',ISFP:'自分のペースで感性を磨く美の探求者',ESTP:'チャンスだと思ったら一瞬で動く人',ESFP:'マイペースに周りをほっこりさせるスター'},
+  cheetah:{INTJ:'速く動いて深く考える最強の異端児',INTP:'動いてから理論を構築する天才',ENTJ:'即行動で頂点に立つリーダー',ENTP:'飽きたら即方向転換のスピード革新家',INFJ:'直感で動いて後から理由を見つける人',INFP:'夢より先に行動してしまう熱い情熱家',ENFJ:'スピードで人を引っ張るエネルギッシュなリーダー',ENFP:'飽き性だけど行動大好きな冒険家',ISTJ:'速くて確実なスピード完遂者',ISFJ:'素早く動いてさりげなく助ける縁の下ヒーロー',ESTJ:'誰より早く確実に片付ける行動力の塊',ESFJ:'テキパキ動いて場をまとめる頼れる人',ISTP:'必要な時だけ全速力のクール行動派',ISFP:'直感で動いて新しい景色を見に行く冒険家',ESTP:'止まれない生粋の行動主義者',ESFP:'ノリとスピードでエネルギーを放つ人'},
+  elephant:{INTJ:'膨大な知識で長期戦略を描く知の巨人',INTP:'絶対忘れない知の蓄積者',ENTJ:'データとビジョンで組織を動かすリーダー',ENTP:'豊富な知識から次々とアイデアを生む発明家',INFJ:'深い記憶と洞察で人を静かに導く存在',INFP:'大切な記憶を宝物にしながら夢を育てる人',ENFJ:'過去の経験で人を成長させるメンター',ENFP:'豊富な経験と好奇心で世界を広げる探検家',ISTJ:'几帳面で記憶力抜群の完璧な記録者',ISFJ:'誕生日も全部覚えている縁の下の守護者',ESTJ:'実績と記憶力で組織を支える柱',ESFJ:'みんなの大切なことを覚えていて気にかける存在',ISTP:'全情報把握で最適解を出す実務家',ISFP:'豊かな感受性と記憶で世界の美を切り取る人',ESTP:'経験値でチャンスを確実につかむ行動家',ESFP:'思い出を大切にしながら今を全力で生きる人'},
+  sheep:{INTJ:'穏やかな外見に誰も気づかない緻密な計画を持つ人',INTP:'争いを避けながらひっそり深い思考を楽しむ人',ENTJ:'柔らかい物腰の意外と仕切り上手',ENTP:'波風立てずにアイデアを実現する平和主義者',INFJ:'誰よりも平和を願い深く人を理解する人',INFP:'穏やかな心の中に豊かな内なる世界を持つ詩人',ENFJ:'調和を大切にして人を成長させる温かいリーダー',ENFP:'争いは嫌いだけど夢への情熱は誰にも負けない人',ISTJ:'争わずに着実に信頼を積み上げる誠実な人',ISFJ:'縁の下で静かに支える優しさの象徴',ESTJ:'和を保ちながら仕事を進める調和型リーダー',ESFJ:'みんなが仲良くいられるように尽くす愛情深い人',ISTP:'穏やかに見えて実は合理的な人',ISFP:'周りに溶け込みながら自分らしい感性を磨く人',ESTP:'平和的に見えてチャンスにはちゃんと飛びつく人',ESFP:'みんなの笑顔だけで最高に幸せな人'},
+  monkey:{INTJ:'好奇心と論理力で次々分野を極める天才',INTP:'探求心が止まらない知識の迷路人',ENTJ:'多才とリーダーシップのオールラウンダー',ENTP:'アイデアが湧いて実験せずにいられない発明家',INFJ:'多彩な才能を持ちながら深く人を見つめる観察者',INFP:'様々なことに興味を持ちながら感性を磨く人',ENFJ:'多才で人を惹きつけ成長させる存在',ENFP:'新しいことへの好奇心が止まらない永遠の冒険家',ISTJ:'なんでもできるのに地道に積み上げる人',ISFJ:'器用さを活かして周りを助けることに喜びを感じる人',ESTJ:'多才な実行力で次々と課題を解決するプロ',ESFJ:'明るく器用でいつの間にかみんなの人気者',ISTP:'多才だけどクール、必要な時だけ実力を見せる人',ISFP:'豊かな感性と器用さで自分だけの世界を作る芸術家',ESTP:'好奇心と行動力で次々チャンスをつかむ実行者',ESFP:'才能と明るさで場を華やかにするスター'},
+  pegasus:{INTJ:'壮大なビジョンを論理的に追う夢想家',INTP:'理想の世界を精密に構築し続ける哲学者',ENTJ:'高い理想を現実に変えるカリスマビジョナリー',ENTP:'常識を超えたアイデアで世界を変える革命家',INFJ:'深い洞察と高い理想で世界をよりよくしようとする人',INFP:'純粋な夢と豊かな感性で独自の世界を紡ぐ詩人',ENFJ:'夢を語るだけで人を動かすインスピレーションの源',ENFP:'夢と情熱と行動力で可能性の限界に挑み続ける人',ISTJ:'夢は大きく着実に一歩ずつ積み上げていく人',ISFJ:'静かに夢を育てながら周りを優しく支える人',ESTJ:'理想を現実に落とし込んで確実に実現するプロ',ESFJ:'夢を語ることで周りを元気にする希望の灯台',ISTP:'夢はでかいけど行動はシンプルな夢追い人',ISFP:'感性の赴くままに夢の世界を飛び回る自由な魂',ESTP:'夢を語るより先に動いてしまう行動力の塊',ESFP:'夢と笑顔と情熱で周りを照らす太陽のような存在'},
+  deer:{INTJ:'繊細な感性と鋭い知性の稀有な存在',INTP:'深い思索と豊かな感受性で世界の本質を探る人',ENTJ:'繊細だけどいざとなれば誰より強いリーダー',ENTP:'感性とアイデアが融合した独創的な革新家',INFJ:'深い共感力と繊細な感性で人の心に寄り添う人',INFP:'誰より豊かな内面世界を持つ感性の芸術家',ENFJ:'繊細な気配りと情熱で人を導く感動的なリーダー',ENFP:'感性豊かで自由、周りを感動させる生まれながらの詩人',ISTJ:'繊細だけど芯が強く静かに信頼を積み上げる人',ISFJ:'繊細な気遣いで誰よりも周りを大切にする守護者',ESTJ:'美意識と実行力を兼ね備えた上品なプロフェッショナル',ESFJ:'繊細な心でみんなの心の拠り所になる人',ISTP:'感性と合理性を兼ね備えた静かなる職人',ISFP:'感性の赴くままに生きる美しい自由人',ESTP:'繊細に見えて行動は大胆な芸術的冒険家',ESFP:'繊細な感性で世界を彩る愛されるエンターテイナー'},
+  leopard:{INTJ:'完璧なビジョンを完璧な戦略で実現する究極の戦略家',INTP:'誰も到達できない深さで分析する孤高の思想家',ENTJ:'完璧主義とカリスマが融合した圧倒的リーダー',ENTP:'神秘的なオーラで人を惹きつける異才の革命家',INFJ:'深い洞察と神秘的な直感で未来を見通す人',INFP:'誰にも理解されない深い世界を静かに守る人',ENFJ:'神秘的なオーラで心を動かすカリスマ',ENFP:'謎めいているのになぜか周りを魅了してしまう人',ISTJ:'完璧主義と誠実さで絶対に裏切らない信頼の人',ISFJ:'完璧な気遣いで周りを守る静かなる守護神',ESTJ:'高い基準と実行力で組織を完璧に動かすプロ',ESFJ:'完璧なホスピタリティで周りを魅了する存在',ISTP:'無駄を省いた洗練されたクールな職人',ISFP:'独自の美意識で唯一無二の世界を作り上げる人',ESTP:'神秘的に見えて実は誰より行動力のある実践家',ESFP:'謎めいた魅力で場を独占する圧倒的なスター'},
+  bear:{INTJ:'強い意志と深い知性で長期目標を実現する人',INTP:'面倒見がいいのに実は深く思考する哲学的な存在',ENTJ:'強引さと面倒見のよさで組織を動かす大物リーダー',ENTP:'面倒見がよくて発想も豊かな頼れる参謀タイプ',INFJ:'深い思いやりと強い意志で人を支える静かな柱',INFP:'厳しい外見に反して内には豊かな感性と夢がある人',ENFJ:'頼りがいと情熱で人を育てる最高のメンター',ENFP:'豪快で愛情深いみんなを包む大きな存在',ISTJ:'一度決めたら絶対やり遂げる鋼の意志の持ち主',ISFJ:'黙って支え続ける最強の縁の下の力持ち',ESTJ:'義理と実力で組織を束ねる頼れる大黒柱',ESFJ:'愛情深くて頼りがいのあるみんなの親分',ISTP:'無口だけど実力派、確実に動くクール職人',ISFP:'大きな体に繊細な心を持つ優しいアーティスト',ESTP:'豪快に行動してチャンスをつかむ勝負師',ESFP:'豪快で明るい場をひとりで盛り上げるムードメーカー'},
+};
+
+// セレクト初期化
+const selA = document.getElementById('selAnimal');
+const selM = document.getElementById('selMBTI');
+ANIMALS.forEach(a => {
+  const opt = document.createElement('option');
+  opt.value = a.key; opt.textContent = `${a.emoji} ${a.name}`;
+  selA.appendChild(opt);
+});
+MBTI_LIST.forEach(m => {
+  const opt = document.createElement('option');
+  opt.value = m.id; opt.textContent = `${m.id}（${m.name}）`;
+  selM.appendChild(opt);
+});
+selA.onchange = render;
+selM.onchange = render;
+
+function clearFilter() { selA.value = ''; selM.value = ''; render(); }
+
+function render() {
+  const filterA = selA.value;
+  const filterM = selM.value;
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  let count = 0;
+
+  ANIMALS.forEach(a => {
+    if (filterA && a.key !== filterA) return;
+    MBTI_LIST.forEach(m => {
+      if (filterM && m.id !== filterM) return;
+      const meta = MBTI_META[m.id];
+      const phrase = (PHRASES[a.key] && PHRASES[a.key][m.id]) || '';
+      const [c1, c2] = meta.color;
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const bg = document.createElement('div');
+      bg.className = 'card-bg';
+      bg.style.background = `linear-gradient(145deg,${c1},${c2})`;
+
+      const img = document.createElement('img');
+      img.className = 'card-img';
+      img.alt = a.name;
+      img.src = `${a.key}_${m.id}.png`;
+      img.onerror = function() {
+        const s = this.src;
+        if (s.includes(`_${m.id}.png`))      { this.src = `${a.key}_${m.id}.svg`; }
+        else if (s.includes(`_${m.id}.svg`)) { this.src = `${a.key}.png`; }
+        else { this.style.display='none'; this.nextElementSibling.style.display='block'; }
+      };
+      const fallback = document.createElement('div');
+      fallback.className = 'card-animal';
+      fallback.style.display = 'none';
+      fallback.textContent = a.emoji;
+      bg.append(img, fallback);
+
+      const badge = document.createElement('div');
+      badge.className = 'card-badge';
+      badge.textContent = meta.badge;
+
+      const sticker = document.createElement('div');
+      sticker.className = 'card-sticker';
+      sticker.append(bg, badge);
+
+      card.innerHTML = `
+        <div class="card-title">${a.name}の${m.name}</div>
+        <div class="card-mbti">${m.id}</div>
+        <div class="card-phrase">${phrase}</div>
+      `;
+      card.insertBefore(sticker, card.firstChild);
+      grid.appendChild(card);
+      count++;
+    });
+  });
+
+  if (count === 0) {
+    const el = document.createElement('div');
+    el.className = 'no-result'; el.textContent = '該当する組み合わせがありません';
+    grid.appendChild(el);
+  }
+  document.getElementById('countLabel').textContent = `${count}件表示中`;
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+<circle cx="160" cy="160" r="148" fill="white"/>
+<filter id="gl"><feGaussianBlur stdDeviation="3"/></filter>
+<circle cx="160" cy="160" r="146" fill="rgba(255,255,255,0.6)" filter="url(#gl)"/>
+<circle cx="270.0" cy="125.0" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="255.26279441628827" cy="170.0" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="215.0" cy="202.94228634059948" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="160.0" cy="215.0" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="105.00000000000003" cy="202.94228634059948" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="64.73720558371174" cy="170.0" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="50.0" cy="125.00000000000001" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="64.73720558371176" cy="80.0" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="104.99999999999994" cy="47.057713659400534" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="159.99999999999997" cy="35.0" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="215.0" cy="47.05771365940052" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<circle cx="255.26279441628822" cy="79.99999999999996" r="22" fill="#E8900A" stroke="#C07000" stroke-width="2"/>
+<ellipse cx="160" cy="215" rx="72" ry="80" fill="#F0C040" stroke="#222" stroke-width="3.5" />
+<ellipse cx="160" cy="222" rx="44" ry="56" fill="#FAEAC0" stroke="#222" stroke-width="3.5" />
+<circle cx="160" cy="115" r="70" fill="#F0C040" stroke="#222" stroke-width="3.5"/>
+<ellipse cx="160" cy="130" rx="52" ry="46" fill="#FAEAC0" stroke="#222" stroke-width="3.5" />
+<circle cx="108" cy="68" r="18" fill="#F0C040" stroke="#222" stroke-width="3.5"/>
+<circle cx="212" cy="68" r="18" fill="#F0C040" stroke="#222" stroke-width="3.5"/>
+<circle cx="108" cy="68" r="10" fill="#E8A0A0" stroke="#222" stroke-width="3.5"/>
+<circle cx="212" cy="68" r="10" fill="#E8A0A0" stroke="#222" stroke-width="3.5"/>
+<circle cx="133" cy="108" r="11" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="133" cy="108" r="8" fill="#111" stroke="none" stroke-width="0"/>
+<circle cx="130" cy="105" r="2.5" fill="white" stroke="none" stroke-width="0"/>
+<circle cx="187" cy="108" r="11" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="187" cy="108" r="8" fill="#111" stroke="none" stroke-width="0"/>
+<circle cx="184" cy="105" r="2.5" fill="white" stroke="none" stroke-width="0"/>
+<ellipse cx="160" cy="135" rx="12" ry="9" fill="#E06060" stroke="#c05050" stroke-width="1.5" />
+<path d="M140 152 Q160 162 180 152" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+<ellipse cx="115" cy="130" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)" stroke="none" stroke-width="0" />
+<ellipse cx="205" cy="130" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)" stroke="none" stroke-width="0" />
+<ellipse cx="248" cy="215" rx="25" ry="32" fill="#A06020" stroke="#704010" stroke-width="2.5" />
+<ellipse cx="248" cy="178" rx="18" ry="22" fill="#C08040" stroke="#904020" stroke-width="2" />
+<rect x="246" y="145" width="4" height="38" rx="2" fill="#704010" stroke="#222" stroke-width="3"/>
+<rect x="242" y="142" width="12" height="8" rx="2" fill="#555" stroke="#222" stroke-width="3"/>
+<path d="M243,160 L255,160 M243,167 L255,167 M243,174 L255,174" fill="none" stroke="#E8C080" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="248" cy="215" r="8" fill="#784010" stroke="none" stroke-width="0"/>
+<path d="M78,65 L88,55 L98,65" fill="none" stroke="#60A040" stroke-width="3" stroke-linecap="round"/>
+<path d="M78,65 L78,90" fill="none" stroke="#60A040" stroke-width="3" stroke-linecap="round"/>
+<text x="90" y="52" font-size="16" font-weight="bold" fill="#FF80A0" text-anchor="middle" font-family="sans-serif">♪</text>
+<text x="72" y="42" font-size="12" font-weight="bold" fill="#80C0FF" text-anchor="middle" font-family="sans-serif">♩</text>
+
+</svg>

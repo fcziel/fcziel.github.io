@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+<circle cx="160" cy="160" r="148" fill="white"/>
+<filter id="gl"><feGaussianBlur stdDeviation="3"/></filter>
+<circle cx="160" cy="160" r="146" fill="rgba(255,255,255,0.6)" filter="url(#gl)"/>
+<ellipse cx="160" cy="215" rx="72" ry="82" fill="#A8A8B8" stroke="#222" stroke-width="3.5" />
+<ellipse cx="160" cy="222" rx="45" ry="56" fill="#D8D8E8" stroke="#222" stroke-width="3.5" />
+<circle cx="95" cy="78" r="42" fill="#A8A8B8" stroke="#222" stroke-width="3.5"/>
+<circle cx="225" cy="78" r="42" fill="#A8A8B8" stroke="#222" stroke-width="3.5"/>
+<circle cx="95" cy="78" r="28" fill="#D4C4C4" stroke="#222" stroke-width="3.5"/>
+<circle cx="225" cy="78" r="28" fill="#D4C4C4" stroke="#222" stroke-width="3.5"/>
+<circle cx="160" cy="118" r="65" fill="#A8A8B8" stroke="#222" stroke-width="3.5"/>
+<ellipse cx="160" cy="132" rx="52" ry="44" fill="#D8D8E8" stroke="#222" stroke-width="3.5" />
+<ellipse cx="160" cy="128" rx="22" ry="16" fill="#555" stroke="#222" stroke-width="3.5" />
+<ellipse cx="153" cy="125" rx="5" ry="4" fill="rgba(255,255,255,0.3)" stroke="none" stroke-width="0" />
+<circle cx="133" cy="110" r="10" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="133" cy="110" r="7" fill="#111" stroke="none" stroke-width="0"/>
+<circle cx="130" cy="107" r="2.5" fill="white" stroke="none" stroke-width="0"/>
+<circle cx="187" cy="110" r="10" fill="white" stroke="#222" stroke-width="3.5"/>
+<circle cx="187" cy="110" r="7" fill="#111" stroke="none" stroke-width="0"/>
+<circle cx="184" cy="107" r="2.5" fill="white" stroke="none" stroke-width="0"/>
+<path d="M144 148 Q160 156 176 148" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+<ellipse cx="115" cy="132" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)" stroke="none" stroke-width="0" />
+<ellipse cx="205" cy="132" rx="14" ry="8.4" fill="rgba(255,150,150,0.45)" stroke="none" stroke-width="0" />
+<rect x="200" y="160" width="82" height="105" rx="5" fill="#F8F0E0" stroke="#AAA" stroke-width="2"/>
+<rect x="230" y="152" width="22" height="18" rx="4" fill="#CCC" stroke="#AAA" stroke-width="2"/>
+<path d="M205,178 L275,178 M205,192 L275,192 M205,206 L265,206 M205,220 L270,220 M205,234 L260,234" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+<rect x="205" y="165" width="18" height="12" rx="2" fill="#FF6060" stroke="none" stroke-width="0"/>
+<text x="214" y="173" font-size="10" font-weight="bold" fill="white" text-anchor="middle" font-family="sans-serif">✓</text>
+
+</svg>
