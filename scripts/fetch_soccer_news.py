@@ -10,7 +10,7 @@ from pathlib import Path
 
 RSS_URL = "https://news.google.com/rss/search?q=%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC&hl=ja&gl=JP&ceid=JP:ja"
 OUT_PATH = Path(__file__).parent.parent / "soccer-news.json"
-MAX_ITEMS = 10
+MAX_ITEMS = 100
 JST = timezone(timedelta(hours=9))
 
 
