@@ -28,7 +28,8 @@
     gtag('config', 'G-9GGPW8HF98');
   </script>
 </head>
-<body>
+<!-- 募集モード切り替え: data-recruit-mode を "gk"（GK限定募集）または "all"（全ポジション募集）に変更するだけで表示が切り替わります -->
+<body data-recruit-mode="gk">
 
   <nav class="nav">
     <a href="index.html" class="nav-logo"><img src="images/IMG_0385.jpeg" alt="FC ZIEL"></a>
@@ -56,45 +57,95 @@
     <canvas id="starfield"></canvas>
     <div class="hero-body">
       <p class="hero-ja">Join FC ZIEL</p>
-      <h1 class="hero-en" data-i18n-html="hero-h1">シュートいっぱい<br>飛んできます</h1>
-      <p class="hero-tagline" data-i18n-html="hero-tagline">おかげさまで一般メンバー募集は一時休止中。<br>今はGK（ゴールキーパー）のみ募集しています。</p>
-      <span class="hero-badge" data-i18n="hero-badge">🧤 現在GKのみ募集中</span>
+
+      <!-- ▼▼▼ GK限定募集モード ▼▼▼ -->
+      <div class="recruit-gk-only">
+        <h1 class="hero-en" data-i18n-html="hero-h1">シュートいっぱい<br>飛んできます</h1>
+        <p class="hero-tagline" data-i18n-html="hero-tagline">おかげさまで一般メンバー募集は一時休止中。<br>今はGK（ゴールキーパー）のみ募集しています。</p>
+        <span class="hero-badge" data-i18n="hero-badge">🧤 現在GKのみ募集中</span>
+      </div>
+      <!-- ▲▲▲ GK限定募集モードここまで ▲▲▲ -->
+
+      <!-- ▼▼▼ 全ポジション募集モード ▼▼▼ -->
+      <div class="recruit-all-only">
+        <h1 class="hero-en">一緒に<br>蹴ろう</h1>
+        <p class="hero-tagline">未経験者・経験者どなたでも大歓迎。<br>まずは気軽に問い合わせを。</p>
+        <span class="hero-badge">⚽ 未経験者歓迎・メンバー随時募集中</span>
+      </div>
+      <!-- ▲▲▲ 全ポジション募集モードここまで ▲▲▲ -->
+
     </div>
   </section>
 
   <!-- Content -->
   <section>
     <div class="container">
-      <span class="section-eyebrow">GK Wanted</span>
-      <h2 class="section-title" data-i18n-html="welcome-title">こんな<span>GKを募集します</span></h2>
+      <!-- ▼▼▼ GK限定募集モード ▼▼▼ -->
+      <div class="recruit-gk-only">
+        <span class="section-eyebrow">GK Wanted</span>
+        <h2 class="section-title" data-i18n-html="welcome-title">こんな<span>GKを募集します</span></h2>
 
-      <!-- GK募集 手配書風ポスター -->
-      <div class="wanted-poster">
-        <p class="wanted-label">WANTED</p>
-        <div class="wanted-icon">🧤</div>
-        <p class="wanted-name" data-i18n="banner-title">GOALKEEPER</p>
-        <p class="wanted-desc" data-i18n="banner-sub">おかげさまで一般メンバーの人数は充足しました。フィールドプレイヤーの募集は一時休止し、GKを探しています。</p>
-        <p class="wanted-desc" style="margin-top:-0.3rem" data-i18n="badge-uniform">ユニフォーム購入不要（貸出）</p>
-        <p class="wanted-reward" data-i18n="wanted-reward">報酬：最高のチームメイトと、勝利の瞬間</p>
+        <!-- GK募集 手配書風ポスター -->
+        <div class="wanted-poster">
+          <p class="wanted-label">WANTED</p>
+          <div class="wanted-icon">🧤</div>
+          <p class="wanted-name" data-i18n="banner-title">GOALKEEPER</p>
+          <p class="wanted-desc" data-i18n="banner-sub">おかげさまで一般メンバーの人数は充足しました。フィールドプレイヤーの募集は一時休止し、GKを探しています。</p>
+          <p class="wanted-desc" style="margin-top:-0.3rem" data-i18n="badge-uniform">ユニフォーム購入不要（貸出）</p>
+          <p class="wanted-reward" data-i18n="wanted-reward">報酬：最高のチームメイトと、勝利の瞬間</p>
+        </div>
+
+        <div style="background:var(--gray); border-radius:12px; padding:1.5rem 2rem; margin-bottom:2rem;">
+          <ul class="checklist">
+            <li data-i18n="check-1">GK経験がある方（レベル問わず）</li>
+            <li data-i18n="check-3">ブランクがあって久しぶりに再開したい方</li>
+            <li data-i18n="check-4">試合に出てみたい方</li>
+            <li data-i18n="check-5">月1回程度のペースで無理なく続けたい方</li>
+            <li data-i18n="check-6">仕事や家庭と両立させたい社会人の方</li>
+            <li data-i18n="check-7">アットホームな雰囲気のチームが好きな方</li>
+            <li data-i18n="check-8">他チームとの掛け持ちOK</li>
+            <li data-i18n="check-9">外国籍の方歓迎</li>
+            <li data-i18n="check-10">ユニフォーム購入不要（貸出です）</li>
+          </ul>
+        </div>
+
+        <p style="background:#FEF3C7;border-left:4px solid #D4A01A;border-radius:8px;padding:0.9rem 1.1rem;font-size:0.85rem;color:#7A5C00;margin-bottom:2rem;" data-i18n="closed-note">
+          ※ GK以外のポジションは、おかげさまで部員数が充足したため現在募集を一時休止しております。今後再開する際はトップページでお知らせします。
+        </p>
       </div>
+      <!-- ▲▲▲ GK限定募集モードここまで ▲▲▲ -->
 
-      <div style="background:var(--gray); border-radius:12px; padding:1.5rem 2rem; margin-bottom:2rem;">
-        <ul class="checklist">
-          <li data-i18n="check-1">GK経験がある方（レベル問わず）</li>
-          <li data-i18n="check-3">ブランクがあって久しぶりに再開したい方</li>
-          <li data-i18n="check-4">試合に出てみたい方</li>
-          <li data-i18n="check-5">月1回程度のペースで無理なく続けたい方</li>
-          <li data-i18n="check-6">仕事や家庭と両立させたい社会人の方</li>
-          <li data-i18n="check-7">アットホームな雰囲気のチームが好きな方</li>
-          <li data-i18n="check-8">他チームとの掛け持ちOK</li>
-          <li data-i18n="check-9">外国籍の方歓迎</li>
-          <li data-i18n="check-10">ユニフォーム購入不要（貸出です）</li>
-        </ul>
+      <!-- ▼▼▼ 全ポジション募集モード ▼▼▼ -->
+      <div class="recruit-all-only">
+        <span class="section-eyebrow">Who We Welcome</span>
+        <h2 class="section-title">こんな方を<span>歓迎します</span></h2>
+
+        <div style="background:linear-gradient(135deg,var(--dark) 0%,var(--navy) 100%);border-radius:12px;padding:1.5rem 2rem;margin-bottom:1.2rem;text-align:center;">
+          <p style="color:var(--gold);font-size:1.3rem;font-weight:900;margin-bottom:0.3rem;">⚽ 未経験者も大歓迎！</p>
+          <p style="color:#9CA3AF;font-size:0.9rem;">サッカーを始めたい方、久しぶりに再開したい方、どなたでも気軽にどうぞ。</p>
+          <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;margin-top:0.9rem;">
+            <span style="background:var(--gold);color:var(--dark);font-weight:700;font-size:0.85rem;padding:0.35rem 0.9rem;border-radius:2rem;">掛け持ちOK</span>
+            <span style="background:var(--gold);color:var(--dark);font-weight:700;font-size:0.85rem;padding:0.35rem 0.9rem;border-radius:2rem;">ユニフォーム購入不要</span>
+          </div>
+        </div>
+
+        <div style="background:var(--gray); border-radius:12px; padding:1.5rem 2rem; margin-bottom:2rem;">
+          <ul class="checklist">
+            <li>サッカー未経験・初心者の方</li>
+            <li>ブランクがあって久しぶりに再開したい方</li>
+            <li>経験者でレベル・ポジション問わない方</li>
+            <li>試合に出てみたい方</li>
+            <li>月1回程度のペースで無理なく続けたい方</li>
+            <li>仕事や家庭と両立させたい社会人の方</li>
+            <li>アットホームな雰囲気のチームが好きな方</li>
+            <li>他チームとの掛け持ちOK（北区リーグ以外のチームに限る）</li>
+            <li>外国籍の方歓迎</li>
+            <li>ユニフォーム購入不要（貸出です）</li>
+            <li>お友達を誘っての複数人参加も大歓迎</li>
+          </ul>
+        </div>
       </div>
-
-      <p style="background:#FEF3C7;border-left:4px solid #D4A01A;border-radius:8px;padding:0.9rem 1.1rem;font-size:0.85rem;color:#7A5C00;margin-bottom:2rem;" data-i18n="closed-note">
-        ※ GK以外のポジションは、おかげさまで部員数が充足したため現在募集を一時休止しております。今後再開する際はトップページでお知らせします。
-      </p>
+      <!-- ▲▲▲ 全ポジション募集モードここまで ▲▲▲ -->
 
       <span class="section-eyebrow">Activity Info</span>
       <h2 class="section-title" data-i18n="activity-title">活動について</h2>
@@ -121,8 +172,11 @@
       <span class="section-eyebrow">Contact</span>
       <h2 class="section-title" data-i18n="contact-title">問い合わせ</h2>
 
-      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.8rem;" data-i18n="contact-intro">
+      <p class="recruit-gk-only" style="color:var(--muted);font-size:0.9rem;margin-bottom:0.8rem;" data-i18n="contact-intro">
         GKに興味がある方、まずは見学だけでも大歓迎です。お気軽にどうぞ。
+      </p>
+      <p class="recruit-all-only" style="color:var(--muted);font-size:0.9rem;margin-bottom:0.8rem;">
+        未経験者・経験者問わず、まずは見学だけでも大歓迎です。お気軽にどうぞ。
       </p>
       <div class="gform-wrap">
         <iframe
