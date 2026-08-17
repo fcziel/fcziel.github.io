@@ -289,6 +289,10 @@ section { padding: 4.5rem 0; }
 .cta-banner .section-title   { color: #fff; }
 .cta-banner p { color: #9CA3AF; margin-bottom: 1.8rem; }
 
+/* ── 募集モード切り替え（body[data-recruit-mode]で"gk"か"all"を指定） ── */
+body[data-recruit-mode="gk"]  .recruit-all-only { display: none !important; }
+body[data-recruit-mode="all"] .recruit-gk-only  { display: none !important; }
+
 /* ── Wanted Poster（GK募集の手配書風バナー） ── */
 .wanted-poster {
   max-width: 380px; margin: 0 auto 1.2rem;
