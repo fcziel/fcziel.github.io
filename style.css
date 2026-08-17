@@ -289,6 +289,46 @@ section { padding: 4.5rem 0; }
 .cta-banner .section-title   { color: #fff; }
 .cta-banner p { color: #9CA3AF; margin-bottom: 1.8rem; }
 
+/* ── Wanted Poster（GK募集の手配書風バナー） ── */
+.wanted-poster {
+  max-width: 380px; margin: 0 auto 1.2rem;
+  background: radial-gradient(ellipse at top left, #f2e6c0 0%, #ddc888 60%, #c9ad6e 100%);
+  border: 3px solid #2b1d0e;
+  outline: 7px solid #3b2a15; outline-offset: -13px;
+  padding: 1.8rem 1.5rem 1.5rem;
+  text-align: center; color: #2b1d0e;
+  transform: rotate(-1.4deg);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.4);
+  clip-path: polygon(
+    1% 4%, 9% 0%, 21% 2.5%, 34% 0%, 48% 2.5%, 61% 0%, 75% 2.5%, 89% 0%, 99% 4%,
+    100% 13%, 98% 26%, 100% 39%, 97% 53%, 100% 67%, 98% 81%, 100% 92%, 96% 100%,
+    85% 98%, 70% 100%, 55% 98%, 40% 100%, 25% 98%, 12% 100%, 2% 97%, 0% 85%,
+    2% 70%, 0% 55%, 2% 40%, 0% 25%, 2% 12%
+  );
+}
+.wanted-label {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2rem; font-weight: 900; letter-spacing: 0.18em;
+  color: #2b1d0e; text-shadow: 2px 2px 0 rgba(0,0,0,0.12);
+  margin-bottom: 0.4rem;
+}
+.wanted-icon { font-size: 3.6rem; margin: 0.3rem 0 0.6rem; filter: sepia(0.35) contrast(1.05); }
+.wanted-name {
+  font-size: 1.25rem; font-weight: 900; letter-spacing: 0.06em;
+  border-top: 2px solid #2b1d0e; border-bottom: 2px solid #2b1d0e;
+  padding: 0.4rem 0; margin-bottom: 0.7rem;
+}
+.wanted-desc { font-size: 0.85rem; line-height: 1.65; margin-bottom: 0.6rem; }
+.wanted-list {
+  list-style: none; text-align: left; display: inline-block;
+  font-size: 0.78rem; line-height: 1.9; margin: 0.4rem 0 0.8rem;
+}
+.wanted-list li::before { content: "☞ "; }
+.wanted-reward {
+  font-size: 0.78rem; font-weight: 700; color: #6b3a10;
+  border-top: 1px dashed #6b3a10; padding-top: 0.6rem;
+}
+
 /* ── Footer ── */
 footer {
   background: #060a10; color: #4B5563;

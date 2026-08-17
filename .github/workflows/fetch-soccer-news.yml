@@ -5,6 +5,9 @@ on:
     - cron: '0 */6 * * *'  # 6時間ごと
   workflow_dispatch:        # 手動実行も可能
 
+permissions:
+  contents: write
+
 jobs:
   fetch-news:
     runs-on: ubuntu-latest
@@ -19,5 +22,9 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add soccer-news.json
-          git diff --cached --quiet || git commit -m "[自動更新] サッカーニュース"
-          git diff --cached --quiet || git push
+          if ! git diff --cached --quiet; then
+            git commit -m "[自動更新] サッカーニュース"
+            git push
+          else
+            echo "変更なし、コミットをスキップ"
+          fi
