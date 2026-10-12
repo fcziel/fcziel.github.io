@@ -460,6 +460,7 @@ footer {
   white-space: nowrap; flex-shrink: 0;
 }
 .popup-news-item .loss { color: #FCA5A5; font-weight: 700; }
+.popup-news-item .draw { color: #FDBA74; font-weight: 700; }
 .popup-recruit-label {
   font-size: 0.68rem; font-weight: 700; color: var(--gold-lt);
   letter-spacing: 0.15em; text-transform: uppercase;
